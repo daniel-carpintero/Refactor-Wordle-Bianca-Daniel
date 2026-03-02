@@ -1,6 +1,22 @@
 import {MAX_WORD_SIZE, MAX_ATTEMPTS} from "./env.js";
-import {Interface} from "./Interface.js";
+import { GameStatus } from "./GameStatus.js";
 import { KeyboardInput } from './KeyboardInput';
+import { LetterResult, WordEvaluator } from "./WordEvaluator.js";
+
+export interface LetterAddAction {
+    type: "add";
+    letter: string;
+    position: number;
+    turn: number;
+}
+
+export interface LetterDeleteAction {
+    type: "delete";
+    position: number;
+    turn: number;
+}
+
+export type KeyAction = LetterAddAction | LetterDeleteAction | null;
 
 export class Game {
     private _pickedWord: string
@@ -8,15 +24,15 @@ export class Game {
     private _actualPosition: number
     private _turn: number
     private _keyboardInput: KeyboardInput
+    private _wordEvaluator: WordEvaluator
     
-    private _interface: Interface
     constructor(pickedWord: string, keyboardInput: KeyboardInput){
         this._pickedWord = pickedWord;
         this._actualWord = "";
         this._actualPosition = 0;
         this._turn = 1;
         this._keyboardInput = keyboardInput
-        this._interface = new Interface();
+        this._wordEvaluator = new WordEvaluator();
     }
 
     get pickedWord(){
@@ -48,126 +64,63 @@ export class Game {
         this._turn = num;
     }
 
-    get interface() {
-        return this._interface;
-    }
-    set interface(i) {
-        this._interface = i;
-    }
-
-    newLetter(code: string):void{
+    newLetter(code: string): LetterAddAction {
         let letter: string = this._keyboardInput.transformCodeToLetter(code);
-        this._interface.setNewLetter(this.turn, this._actualPosition, letter);
+        
+        const action: LetterAddAction = {
+            type: "add",
+            letter,
+            position: this._actualPosition,
+            turn: this._turn
+        };
+
         this._actualPosition = this._actualPosition + 1;
         this._actualWord += letter;
+
+        return action;
     }
 
-    checkWordIsRight(): boolean {
-        if (this._actualWord === this._pickedWord) {
-            location.assign("/winner");
-            return true; 
-        }
-        return false;
-    }
+    enterPressed(): {status: GameStatus, evaluation: LetterResult[] | null} {
+        if (this._actualWord.length == MAX_WORD_SIZE){
+            const isWinner = this._actualWord === this.pickedWord;
+            const isLastTurn = this._turn === MAX_ATTEMPTS;
 
-    checkRightLetters = ():void=>{
-        for(let i=0; i<MAX_WORD_SIZE; i++){
-            if (this._pickedWord[i]==this._actualWord[i]){
-                this._interface.changeBackgroundPosition(this._turn, i, "rightLetter");
+            const evaluation = this._wordEvaluator.evaluateWord(this._pickedWord, this._actualWord);
+
+            this._turn = this._turn + 1;
+            this._actualPosition = 0;
+            this._actualWord = "";
+            
+            if(isWinner){
+                return {status: GameStatus.WIN, evaluation};
+            }
+
+            if(isLastTurn){
+                return {status: GameStatus.LOSE, evaluation};
             }
         }
+
+        return {status: GameStatus.ONGOING, evaluation: null};
     }
 
-    checkMisplacedLetters = ():void=> {
-         const usedPositions = new Array(MAX_WORD_SIZE).fill(false);
-         for (let i=0; i<MAX_WORD_SIZE; i++){
-            if (this._pickedWord[i] === this._actualWord[i]) usedPositions[i] = true;
-        }
-        for (let i=0; i<MAX_WORD_SIZE; i++){
-            const actualLetter = this._actualWord[i];
-            if (this._pickedWord[i] === actualLetter) continue;
-
-            let found = false;
-            for (let j=0; j<MAX_WORD_SIZE; j++){
-                if (!usedPositions[j] && this._pickedWord[j] === actualLetter){
-                    usedPositions[j] = true;
-                    found = true;
-                    break;
-            }
-         }
-         if (found) this._interface.changeBackgroundPosition(this._turn, i, "misplacedLetter");
-        }
-    }
-
-    checkWrongLetters = (): void => {
-    const usedPositions = new Array(MAX_WORD_SIZE).fill(false);
-
-    for (let i = 0; i < MAX_WORD_SIZE; i++) {
-        if (this._pickedWord[i] === this._actualWord[i]) {
-            usedPositions[i] = true;
-        }
-    }
-
-    for (let i = 0; i < MAX_WORD_SIZE; i++) {
-        if (this._pickedWord[i] === this._actualWord[i]) continue;
-        for (let j = 0; j < MAX_WORD_SIZE; j++) {
-            if (!usedPositions[j] && this._pickedWord[j] === this._actualWord[i]) {
-                usedPositions[j] = true;
-                break; 
-            }
-        }
-    }
-    for (let i = 0; i < MAX_WORD_SIZE; i++) {
-        const letter = this._actualWord[i];
-        let found = false;
-        for (let j = 0; j < MAX_WORD_SIZE; j++) {
-            if (!usedPositions[j] && this._pickedWord[j] === letter) {
-                found = true;
-                break;
-            }
-        }
-        if (!found && this._pickedWord[i] !== letter) {
-            this._interface.changeBackgroundPosition(this._turn, i, "wrongLetter");
-        }
-    }
-};
-
-    updateAfterANewWord = ():void=>{
-        this.checkRightLetters();
-        this.checkMisplacedLetters();
-        this.checkWrongLetters();
-        this._turn = this._turn + 1;
-        this._actualPosition = 0;
-        this._actualWord = "";
-    }
-
-    checkGameIsOver():void{
-        if (this._turn === MAX_ATTEMPTS){
-            location.assign("/loser");
-        }
-    }
-
-    enterPressed(): void {
-    if (this._actualWord.length === MAX_WORD_SIZE) {
-        if (this.checkWordIsRight()) return; 
-        this.updateAfterANewWord();
-        this.checkGameIsOver();
-    }
-}
-
-    backspacePressed():void{
+    backspacePressed(): LetterDeleteAction | null{
         if (this._actualPosition > 0) {
             this._actualPosition -= 1;
-            this._interface.deleteLetter(this._turn, this._actualPosition);
+            
+            return {
+                type: "delete",
+                position: this._actualPosition,
+                turn: this._turn
+            };
         }
+
+        return null;
     }
 
-    newKeyPressed(code: string):void{ 
-        if (this._keyboardInput.isValidLetter(code) && this._actualPosition < MAX_WORD_SIZE) this.newLetter(code);
-        if (this._keyboardInput.isEnterKey(code)) this.enterPressed();
-        if (this._keyboardInput.isBackspaceKey(code)) this.backspacePressed();
-        this._interface.changeBackgroundKey(code);
+    newKeyPressed(code: string): KeyAction { 
+        if (this._keyboardInput.isValidLetter(code) && this._actualPosition < MAX_WORD_SIZE) return this.newLetter(code);
+        if (this._keyboardInput.isBackspaceKey(code)) return this.backspacePressed();
+        return null;
     }
-
     
 }
