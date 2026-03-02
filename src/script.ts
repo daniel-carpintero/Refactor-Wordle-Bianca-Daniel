@@ -15,42 +15,33 @@ console.log(pickedWord);
 
 const game: Game = new Game(pickedWord, keyboardInput);
 
-function handleKey(code: string){
-    if(keyboardInput.isEnterKey(code)){
+function handleKey(code: string) {
+    if (keyboardInput.isEnterKey(code)) {
         const result = game.enterPressed();
 
-        if(result.evaluation){
+        if (result.evaluation) {
+            const evaluatedTurn = game.turn - 1;
+
             result.evaluation.forEach((state, index) => {
-                if(state === "right"){
-                    _interface.changeBackgroundPosition(game.turn - 1, index, "rightLetter");
+                if (state) {
+                    _interface.setCellState(evaluatedTurn, index, state);
                 }
-
-                if(state === "misplaced"){
-                    _interface.changeBackgroundPosition(game.turn - 1, index, "misplacedLetter");
-                }
-
-                if(state === "wrong"){
-                    _interface.changeBackgroundPosition(game.turn - 1, index, "wrongLetter");
-                }
-                
             });
         }
 
         navigation.navigate(result.status);
-    } else {
-        const action = game.newKeyPressed(code);
+        return;
+    }
 
-        if(action != null){
-             if(action.type === "add"){
-                _interface.setNewLetter(action?.turn, action?.position, action.letter);
-            }
+    const action = game.newKeyPressed(code);
+    if (!action) return;
 
-            if(action.type === "delete"){
-                _interface.deleteLetter(action.turn, action.position);
-            }
+    if (action.type === "add") {
+        _interface.setLetter(action.turn, action.position, action.letter);
+    }
 
-            _interface.changeBackgroundKey(code);
-        }
+    if (action.type === "delete") {
+        _interface.clearLetter(action.turn, action.position);
     }
 }
 
