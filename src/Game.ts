@@ -1,7 +1,8 @@
 import {MAX_WORD_SIZE, MAX_ATTEMPTS} from "./env.js";
+import { GameStatus } from "./GameStatus.js";
 import {Interface} from "./Interface.js";
 import { KeyboardInput } from './KeyboardInput';
-import { WordEvaluator } from "./WordEvaluator.js";
+import { LetterResult, WordEvaluator } from "./WordEvaluator.js";
 
 export class Game {
     private _pickedWord: string
@@ -65,33 +66,27 @@ export class Game {
         this._actualWord += letter;
     }
 
-    checkWordIsRight():void{
-        if (this._actualWord == this._pickedWord){
-            location.assign("/winner");
-        }
-    }
-
-    updateAfterANewWord = ():void=>{
-        this._wordEvaluator.checkRightLetters(this._pickedWord, this._actualWord, this._interface, this._turn);
-        this._wordEvaluator.checkMisplacedLetters(this._pickedWord, this._actualWord, this._interface, this._turn);
-        this._wordEvaluator.checkWrongLetters(this._pickedWord, this._actualWord, this._interface, this._turn);
-        this._turn = this._turn + 1;
-        this._actualPosition = 0;
-        this._actualWord = "";
-    }
-
-    checkGameIsOver():void{
-        if (this.turn == MAX_ATTEMPTS){
-            location.assign("/loser");
-        }
-    }
-
-    enterPressed():void{
+    enterPressed(): {status: GameStatus, evaluation: LetterResult[] | null} {
         if (this._actualWord.length == MAX_WORD_SIZE){
-            this.checkWordIsRight();
-            this.checkGameIsOver();
-            this.updateAfterANewWord();
+            const isWinner = this._actualWord === this.pickedWord;
+            const isLastTurn = this._turn === MAX_ATTEMPTS;
+
+            const evaluation = this._wordEvaluator.evaluateWord(this._pickedWord, this._actualWord);
+
+            this._turn = this._turn + 1;
+            this._actualPosition = 0;
+            this._actualWord = "";
+            
+            if(isWinner){
+                return {status: GameStatus.WIN, evaluation};
+            }
+
+            if(isLastTurn){
+                return {status: GameStatus.LOSE, evaluation};
+            }
         }
+
+        return {status: GameStatus.ONGOING, evaluation: null};
     }
 
     backspacePressed():void{
@@ -103,10 +98,8 @@ export class Game {
 
     newKeyPressed(code: string):void{ 
         if (this._keyboardInput.isValidLetter(code) && this._actualPosition < MAX_WORD_SIZE) this.newLetter(code);
-        if (this._keyboardInput.isEnterKey(code)) this.enterPressed();
         if (this._keyboardInput.isBackspaceKey(code)) this.backspacePressed();
         this._interface.changeBackgroundKey(code);
     }
-
     
 }
