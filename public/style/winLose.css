@@ -1,0 +1,48 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    padding: 20px 40px;
+    border-radius: 10px;
+    letter-spacing: 2px;
+}
+
+body.victory h1 {
+    background-color: #4CAF50;
+    color: white;
+}
+
+body.loser h1 {
+    background-color: #e53935;
+    color: white;
+}
+
+a {
+    text-decoration: none;
+    background-color: #f4a261;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+a:hover {
+    background-color: #6c757d;
+}
