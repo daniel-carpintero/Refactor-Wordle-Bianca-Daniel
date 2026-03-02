@@ -1,8 +1,22 @@
 import {MAX_WORD_SIZE, MAX_ATTEMPTS} from "./env.js";
 import { GameStatus } from "./GameStatus.js";
-import {Interface} from "./Interface.js";
 import { KeyboardInput } from './KeyboardInput';
 import { LetterResult, WordEvaluator } from "./WordEvaluator.js";
+
+export interface LetterAddAction {
+    type: "add";
+    letter: string;
+    position: number;
+    turn: number;
+}
+
+export interface LetterDeleteAction {
+    type: "delete";
+    position: number;
+    turn: number;
+}
+
+export type KeyAction = LetterAddAction | LetterDeleteAction | null;
 
 export class Game {
     private _pickedWord: string
@@ -12,14 +26,12 @@ export class Game {
     private _keyboardInput: KeyboardInput
     private _wordEvaluator: WordEvaluator
     
-    private _interface: Interface
     constructor(pickedWord: string, keyboardInput: KeyboardInput){
         this._pickedWord = pickedWord;
         this._actualWord = "";
         this._actualPosition = 0;
         this._turn = 1;
         this._keyboardInput = keyboardInput
-        this._interface = new Interface();
         this._wordEvaluator = new WordEvaluator();
     }
 
@@ -52,18 +64,20 @@ export class Game {
         this._turn = num;
     }
 
-    get interface() {
-        return this._interface;
-    }
-    set interface(i) {
-        this._interface = i;
-    }
-
-    newLetter(code: string):void{
+    newLetter(code: string): LetterAddAction {
         let letter: string = this._keyboardInput.transformCodeToLetter(code);
-        this._interface.setNewLetter(this.turn, this.actualPosition, letter);
+        
+        const action: LetterAddAction = {
+            type: "add",
+            letter,
+            position: this._actualPosition,
+            turn: this._turn
+        };
+
         this._actualPosition = this._actualPosition + 1;
         this._actualWord += letter;
+
+        return action;
     }
 
     enterPressed(): {status: GameStatus, evaluation: LetterResult[] | null} {
@@ -89,17 +103,24 @@ export class Game {
         return {status: GameStatus.ONGOING, evaluation: null};
     }
 
-    backspacePressed():void{
+    backspacePressed(): LetterDeleteAction | null{
         if (this._actualPosition > 0) {
             this._actualPosition -= 1;
-            this._interface.deleteLetter(this._turn, this._actualPosition);
+            
+            return {
+                type: "delete",
+                position: this._actualPosition,
+                turn: this._turn
+            };
         }
+
+        return null;
     }
 
-    newKeyPressed(code: string):void{ 
-        if (this._keyboardInput.isValidLetter(code) && this._actualPosition < MAX_WORD_SIZE) this.newLetter(code);
-        if (this._keyboardInput.isBackspaceKey(code)) this.backspacePressed();
-        this._interface.changeBackgroundKey(code);
+    newKeyPressed(code: string): KeyAction { 
+        if (this._keyboardInput.isValidLetter(code) && this._actualPosition < MAX_WORD_SIZE) return this.newLetter(code);
+        if (this._keyboardInput.isBackspaceKey(code)) return this.backspacePressed();
+        return null;
     }
     
 }
