@@ -57,15 +57,17 @@ export class Game {
 
     newLetter(code: string):void{
         let letter: string = this._keyboardInput.transformCodeToLetter(code);
-        this._interface.setNewLetter(this.turn, this.actualPosition, letter);
+        this._interface.setNewLetter(this.turn, this._actualPosition, letter);
         this._actualPosition = this._actualPosition + 1;
         this._actualWord += letter;
     }
 
-    checkWordIsRight():void{
-        if (this._actualWord == this._pickedWord){
+    checkWordIsRight(): boolean {
+        if (this._actualWord === this._pickedWord) {
             location.assign("/winner");
+            return true; 
         }
+        return false;
     }
 
     checkRightLetters = ():void=>{
@@ -77,32 +79,58 @@ export class Game {
     }
 
     checkMisplacedLetters = ():void=> {
-        let actualLetter: string = "";
-        let pattern: RegExp;
-        let numberOfCoincidences: number = 0;
-        let isMisplacedLetter: boolean;
+         const usedPositions = new Array(MAX_WORD_SIZE).fill(false);
+         for (let i=0; i<MAX_WORD_SIZE; i++){
+            if (this._pickedWord[i] === this._actualWord[i]) usedPositions[i] = true;
+        }
         for (let i=0; i<MAX_WORD_SIZE; i++){
-            isMisplacedLetter = true;
-            actualLetter = this._actualWord[i];
-            pattern = new RegExp(actualLetter,"g");
-            numberOfCoincidences = (this._pickedWord.match(pattern)||[]).length;
-            if (this._pickedWord[i]==this._actualWord[i]) isMisplacedLetter=false;
-            if (numberOfCoincidences>0 && isMisplacedLetter) this._interface.changeBackgroundPosition(this._turn, i, "misplacedLetter");
-            
+            const actualLetter = this._actualWord[i];
+            if (this._pickedWord[i] === actualLetter) continue;
+
+            let found = false;
+            for (let j=0; j<MAX_WORD_SIZE; j++){
+                if (!usedPositions[j] && this._pickedWord[j] === actualLetter){
+                    usedPositions[j] = true;
+                    found = true;
+                    break;
+            }
+         }
+         if (found) this._interface.changeBackgroundPosition(this._turn, i, "misplacedLetter");
         }
     }
 
-    checkWrongLetters = ():void=>{
-        let actualLetter = "";
-        let pattern:RegExp;
-        let numberOfCoincidences = 0;
-        for (let i=0; i<MAX_WORD_SIZE; i++){
-            actualLetter = this._actualWord[i];
-            pattern = new RegExp(actualLetter,"g");
-            numberOfCoincidences = (this._pickedWord.match(pattern)||[]).length;
-            if (numberOfCoincidences==0) this._interface.changeBackgroundPosition(this._turn, i, "wrongLetter");
+    checkWrongLetters = (): void => {
+    const usedPositions = new Array(MAX_WORD_SIZE).fill(false);
+
+    for (let i = 0; i < MAX_WORD_SIZE; i++) {
+        if (this._pickedWord[i] === this._actualWord[i]) {
+            usedPositions[i] = true;
         }
     }
+
+    for (let i = 0; i < MAX_WORD_SIZE; i++) {
+        if (this._pickedWord[i] === this._actualWord[i]) continue;
+        for (let j = 0; j < MAX_WORD_SIZE; j++) {
+            if (!usedPositions[j] && this._pickedWord[j] === this._actualWord[i]) {
+                usedPositions[j] = true;
+                break; 
+            }
+        }
+    }
+    for (let i = 0; i < MAX_WORD_SIZE; i++) {
+        const letter = this._actualWord[i];
+        let found = false;
+        for (let j = 0; j < MAX_WORD_SIZE; j++) {
+            if (!usedPositions[j] && this._pickedWord[j] === letter) {
+                found = true;
+                break;
+            }
+        }
+        if (!found && this._pickedWord[i] !== letter) {
+            this._interface.changeBackgroundPosition(this._turn, i, "wrongLetter");
+        }
+    }
+};
 
     updateAfterANewWord = ():void=>{
         this.checkRightLetters();
@@ -114,18 +142,18 @@ export class Game {
     }
 
     checkGameIsOver():void{
-        if (this.turn == MAX_ATTEMPTS){
+        if (this._turn === MAX_ATTEMPTS){
             location.assign("/loser");
         }
     }
 
-    enterPressed():void{
-        if (this._actualWord.length == MAX_WORD_SIZE){
-            this.checkWordIsRight();
-            this.checkGameIsOver();
-            this.updateAfterANewWord();
-        }
+    enterPressed(): void {
+    if (this._actualWord.length === MAX_WORD_SIZE) {
+        if (this.checkWordIsRight()) return; 
+        this.updateAfterANewWord();
+        this.checkGameIsOver();
     }
+}
 
     backspacePressed():void{
         if (this._actualPosition > 0) {
