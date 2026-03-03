@@ -1,5 +1,5 @@
 import { Game } from "./Game";
-import { Interface } from "./Interface";
+import { Interface, CellState } from "./Interface";
 import { KeyboardInput } from "./KeyboardInput";
 import { NavigationHandler } from "./NavigationHandler";
 
@@ -9,53 +9,70 @@ export class GameController {
     private _navigation: NavigationHandler;
     private _keyboard: KeyboardInput;
 
-    constructor(_game: Game, _interface: Interface, _navigation: NavigationHandler, _keyboard: KeyboardInput){
-        this._game = _game;
-        this._interface = _interface;
-        this._navigation = _navigation;
-        this._keyboard = _keyboard;
+    constructor(
+        game: Game,
+        ui: Interface,
+        navigation: NavigationHandler,
+        keyboard: KeyboardInput
+    ) {
+        this._game = game;
+        this._interface = ui;
+        this._navigation = navigation;
+        this._keyboard = keyboard;
+    }
+handleKey(code: string): void {
+
+    if (this._keyboard.isEnterKey(code)) {
+
+        const currentWord = (this._game as any)._actualWord;
+
+        const result = this._game.enterPressed();
+
+        if (result.evaluation) {
+            const evaluatedTurn = this._game.turn - 1;
+
+            result.evaluation.forEach((state, index) => {
+
+                if (!state) return; 
+
+                this._interface.setCellState(
+                    evaluatedTurn,
+                    index,
+                    state
+                );
+
+                const letter = currentWord[index];
+                this._interface.setKeyState(letter, state);
+            });
+        }
+
+        this._navigation.navigate(result.status);
+        return;
     }
 
-    handleKey(code: string){
-        if(this._keyboard.isEnterKey(code)){
-            const result = this._game.enterPressed();
+    if (this._keyboard.isBackspaceKey(code)) {
 
-            if(result.evaluation){
-                result.evaluation.forEach((state, index) => {
-                    if(state === "right"){
-                        this._interface.changeBackgroundPosition(this._game.turn - 1, index, "rightLetter");
-                    }
+        const action = this._game.backspacePressed();
 
-                    if(state === "misplaced"){
-                       this._interface.changeBackgroundPosition(this._game.turn - 1, index, "misplacedLetter");
-                    }
+        if (action) {
+            this._interface.clearLetter(action.turn, action.position);
+        }
 
-                    if(state === "wrong"){
-                        this._interface.changeBackgroundPosition(this._game.turn - 1, index, "wrongLetter");
-                    }
-                    
-                });
-            }
+        return;
+    }
 
-            this._navigation.navigate(result.status);
-        } else if(this._keyboard.isBackspaceKey(code)){
+    if (this._keyboard.isValidLetter(code)) {
 
-            const action = this._game.backspacePressed();
+        const letter = this._keyboard.transformCodeToLetter(code);
+        const action = this._game.addLetter(letter);
 
-            if(action != null){
-                this._interface.deleteLetter(action.turn, action.position);
-            }
-
-            return;
-        } else if(this._keyboard.isValidLetter(code)){
-            const letter = this._keyboard.transformCodeToLetter(code);
-            const action = this._game.addLetter(letter);
-
-            if(action != null){
-                this._interface.setNewLetter(action.turn, action.position, action.letter);
-                this._interface.changeBackgroundKey(code);
-            }
+        if (action) {
+            this._interface.setLetter(
+                action.turn,
+                action.position,
+                action.letter
+            );
         }
     }
-
+}
 }
