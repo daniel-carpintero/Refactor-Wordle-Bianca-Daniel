@@ -38,18 +38,21 @@ export class GameController {
             }
 
             this._navigation.navigate(result.status);
-        } else {
-            const action = this._game.newKeyPressed(code);
+        } else if(this._keyboard.isBackspaceKey(code)){
+
+            const action = this._game.backspacePressed();
 
             if(action != null){
-                if(action.type === "add"){
-                    this._interface.setNewLetter(action.turn, action.position, action.letter);
-                }
+                this._interface.deleteLetter(action.turn, action.position);
+            }
 
-                if(action.type === "delete"){
-                    this._interface.deleteLetter(action.turn, action.position);
-                }
+            return;
+        } else if(this._keyboard.isValidLetter(code)){
+            const letter = this._keyboard.transformCodeToLetter(code);
+            const action = this._game.addLetter(letter);
 
+            if(action != null){
+                this._interface.setNewLetter(action.turn, action.position, action.letter);
                 this._interface.changeBackgroundKey(code);
             }
         }

@@ -14,7 +14,7 @@ const wordsCollection: Word = new Word(["JUEGO", "TALAR", "BAILE", "ANDAR", "MON
 const pickedWord: string = wordsCollection.getRandomWord();
 console.log(pickedWord);
 
-const game: Game = new Game(pickedWord, keyboardInput);
+const game: Game = new Game(pickedWord);
 const controller = new GameController(game, _interface, navigation, keyboardInput);
 
 Array.from(document.getElementsByClassName("key")).forEach(element => 
