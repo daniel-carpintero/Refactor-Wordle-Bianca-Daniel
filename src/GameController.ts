@@ -9,12 +9,7 @@ export class GameController {
     private _navigation: NavigationHandler;
     private _keyboard: KeyboardInput;
 
-    constructor(
-        game: Game,
-        ui: Interface,
-        navigation: NavigationHandler,
-        keyboard: KeyboardInput
-    ) {
+    constructor(game: Game, ui: Interface, navigation: NavigationHandler, keyboard: KeyboardInput) {
         this._game = game;
         this._interface = ui;
         this._navigation = navigation;
@@ -68,13 +63,9 @@ export class GameController {
     handleKey(code: string): void {
         if (this._keyboard.isEnterKey(code)) {
             this.handleEnter();
-        }
-
-        if (this._keyboard.isBackspaceKey(code)) {
+        } else if (this._keyboard.isBackspaceKey(code)) {
             this.handleBackspace();
-        }
-
-        if (this._keyboard.isValidLetter(code)) {
+        } else if (this._keyboard.isValidLetter(code)) {
             this.handleLetter(code);
         }
     }

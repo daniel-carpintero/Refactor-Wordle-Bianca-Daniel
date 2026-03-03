@@ -5,6 +5,7 @@ import { NavigationHandler } from "./NavigationHandler.js";
 import { Interface } from "./Interface.js";
 import { GameController } from "./GameController.js";
 import { WordEvaluator } from './WordEvaluator.js';
+import { MAX_WORD_SIZE, MAX_ATTEMPTS } from "./env.js";
 
 const navigation = new NavigationHandler();
 const keyboardInput = new KeyboardInput();
@@ -16,7 +17,7 @@ const wordsCollection: Word = new Word(["JUEGO","TALAR","BAILE","ANDAR","MONTE",
 const pickedWord: string = wordsCollection.getRandomWord();
 console.log(pickedWord); 
 
-const game: Game = new Game(pickedWord, wordEvaluator);
+const game: Game = new Game(pickedWord, wordEvaluator, MAX_WORD_SIZE, MAX_ATTEMPTS);
 
 const controller = new GameController(
     game,

@@ -1,5 +1,4 @@
 import {MAX_WORD_SIZE} from "./env.js";
-import {Interface} from "./Interface.js";
 
 export type LetterResult = "right" | "misplaced" | "wrong" | null;
 
