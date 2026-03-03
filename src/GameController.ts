@@ -24,7 +24,7 @@ handleKey(code: string): void {
 
     if (this._keyboard.isEnterKey(code)) {
 
-        const currentWord = this._game.actualWord;
+        const currentWord = this._game.actualWord || "";
 
         const result = this._game.enterPressed();
 
@@ -42,6 +42,7 @@ handleKey(code: string): void {
                 );
 
                 const letter = currentWord[index];
+                if (!letter) return;
                 this._interface.setKeyState(letter, state);
             });
         }

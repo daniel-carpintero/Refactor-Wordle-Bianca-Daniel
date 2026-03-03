@@ -42,7 +42,8 @@ export class Interface {
         cell.classList.add(stateClasses[state]);
     }
 
-    setKeyState(code: string, state: CellState): void {
+    setKeyState(code: string | undefined, state: CellState): void {
+        if (!code) return;
         if (code === "Enter" || code === "Backspace") return;
 
         const key = document.querySelector(
