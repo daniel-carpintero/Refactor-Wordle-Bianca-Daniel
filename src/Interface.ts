@@ -3,16 +3,22 @@ export type CellState = "right" | "misplaced" | "wrong";
 export class Interface {
 
     private getRow(turn: number): HTMLElement {
-        const row = document.getElementById(`row_${turn}`);
-        if (!row) throw new Error(`Row ${turn} not found`);
-        return row;
+    const row = document.getElementById(`row_${turn}`);
+    if (!row) {
+        console.error(`Row not found: ${turn}`);
+        return document.createElement("div"); 
     }
+    return row;
+}
 
     private getCell(turn: number, position: number): HTMLElement {
         const row = this.getRow(turn);
         const cell = row.children[position] as HTMLElement;
 
-        if (!cell) throw new Error(`Cell not found at turn ${turn}, position ${position}`);
+        if (!cell) {
+            console.error(`Cell not found at turn ${turn}, position ${position}`);
+            return document.createElement("div"); 
+        }
         return cell;
     }
 
