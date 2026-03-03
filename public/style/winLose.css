@@ -63,14 +63,16 @@ body.victory::before {
 }
 
 body.loser h1 {
-    animation: shake 0.4s ease-in-out 0s 3;
+    animation: loseShake 0.5s ease-in-out forwards;
 }
 
-@keyframes shake {
+@keyframes loseShake {
     0% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    50% { transform: translateX(10px); }
-    75% { transform: translateX(-10px); }
-    100% { transform: translateX(0); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-10px); }
+    80% { transform: translateX(10px); }
+    100% { transform: translateX(0) translateY(5px); opacity: 0.9; }
 }
+
 
