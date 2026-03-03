@@ -18,11 +18,11 @@ const pickedWord = wordCollection.getRandomWord();
 const game = new Game(pickedWord, wordEvaluator, MAX_WORD_SIZE, MAX_ATTEMPTS);
 const controller = new GameController(game, ui, navigation, keyboardInput);
 Array.from(document.getElementsByClassName("key")).forEach(element => {
-    element.addEventListener("click", (e) => {
-        controller.handleKey(e.target.value);
+    element.addEventListener("click", (event) => {
+        controller.handleKey(event.target.value);
     });
 });
-document.addEventListener("keydown", (e) => {
-    controller.handleKey(e.code);
+document.addEventListener("keydown", (event) => {
+    controller.handleKey(event.code);
 });
 //# sourceMappingURL=script.js.map
