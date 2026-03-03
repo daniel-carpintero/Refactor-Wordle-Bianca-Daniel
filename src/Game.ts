@@ -1,4 +1,3 @@
-import { MAX_WORD_SIZE, MAX_ATTEMPTS } from "./env.js";
 import { GameStatus } from "./GameStatus.js";
 import { LetterResult, WordEvaluator } from "./WordEvaluator.js";
 
@@ -23,8 +22,8 @@ export class Game {
     private _currentPosition: number;
     private _turn: number;
     private _wordEvaluator: WordEvaluator;
-
-    constructor(pickedWord: string, evaluator: WordEvaluator) {
+    
+    constructor(pickedWord: string, evaluator: WordEvaluator, private readonly maxWordSize: number, private readonly maxAttempts: number){
         this._pickedWord = pickedWord;
         this._currentWord = "";
         this._currentPosition = 0;
@@ -45,7 +44,7 @@ export class Game {
     }
 
     addLetter(letter: string): LetterAddAction | null {
-        if (this._currentPosition >= MAX_WORD_SIZE) {
+        if(this._currentPosition >= this.maxWordSize){
             return null;
         }
 
@@ -62,13 +61,14 @@ export class Game {
         return action;
     }
 
-    enterPressed(): { status: GameStatus; evaluation: LetterResult[] | null; evaluatedTurn: number | null } {
-        if (this._currentWord.length !== MAX_WORD_SIZE) {
-            return { status: GameStatus.ONGOING, evaluation: null, evaluatedTurn: null };
+    enterPressed(): {status: GameStatus, evaluation: LetterResult[] | null, evaluatedTurn: number | null} {
+        if(this._currentWord.length !== this.maxWordSize){
+            return {status: GameStatus.ONGOING, evaluation: null, evaluatedTurn: null};
         }
 
-        const isWinner = this._currentWord === this._pickedWord;
-        const isLastTurn = this._turn === MAX_ATTEMPTS;
+        const isWinner = this._currentWord === this.pickedWord;
+        const isLastTurn = this._turn === this.maxAttempts;
+
         const evaluation = this._wordEvaluator.evaluateWord(this._pickedWord, this._currentWord);
         const evaluatedTurn = this._turn;
 

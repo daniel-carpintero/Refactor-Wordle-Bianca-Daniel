@@ -1,4 +1,4 @@
-import { MAX_WORD_SIZE } from "./env.js";
+import {MAX_WORD_SIZE} from "./env.js";
 
 export type LetterResult = "right" | "misplaced" | "wrong" | null;
 
