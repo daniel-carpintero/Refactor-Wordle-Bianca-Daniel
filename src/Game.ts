@@ -36,6 +36,10 @@ export class Game {
         return this._pickedWord;
     }
 
+    get actualWord() {
+    return this._actualWord;
+}
+
     get turn(){
         return this._turn;
     }

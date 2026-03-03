@@ -24,7 +24,7 @@ handleKey(code: string): void {
 
     if (this._keyboard.isEnterKey(code)) {
 
-        const currentWord = (this._game as any)._actualWord;
+        const currentWord = this._game.actualWord;
 
         const result = this._game.enterPressed();
 
