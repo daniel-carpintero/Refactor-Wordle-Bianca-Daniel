@@ -22,15 +22,9 @@ export class Game {
     private _currentWord: string;
     private _currentPosition: number;
     private _turn: number;
-<<<<<<< HEAD
-    private _wordEvaluator: WordEvaluator;
-    
-    constructor(pickedWord: string, evaluator: WordEvaluator, private readonly maxWordSize: number, private readonly maxAttempts: number){
-=======
     private readonly _wordEvaluator: IWordEvaluator;
     
     constructor(pickedWord: string, _evaluator: IWordEvaluator, private readonly maxWordSize: number, private readonly maxAttempts: number){
->>>>>>> origin/refactor/daniel.carpintero
         this._pickedWord = pickedWord;
         this._currentWord = "";
         this._currentPosition = 0;

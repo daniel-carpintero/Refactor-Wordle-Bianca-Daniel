@@ -1,8 +1,5 @@
 import {MAX_WORD_SIZE} from "./env.js";
-<<<<<<< HEAD
-=======
 import { IWordEvaluator } from "./IWordEvaluator.js";
->>>>>>> origin/refactor/daniel.carpintero
 
 export type LetterResult = "right" | "misplaced" | "wrong" | null;
 
