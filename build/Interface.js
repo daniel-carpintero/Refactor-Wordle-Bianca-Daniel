@@ -27,10 +27,9 @@ export class Interface {
         };
         cell.classList.add(stateClasses[state]);
     }
-    setKeyState(code, state) {
-        if (code === "Enter" || code === "Backspace")
-            return;
-        const key = document.querySelector(`.key[value="${code}"]`);
+    setKeyState(letter, state) {
+        const keyCode = letter === "Ñ" ? "Semicolon" : "Key" + letter;
+        const key = document.querySelector(`.key[value="${keyCode}"]`);
         if (!key)
             return;
         const statePriority = {

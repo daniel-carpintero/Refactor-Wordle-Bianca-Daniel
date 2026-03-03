@@ -53,6 +53,7 @@ export class Game {
     backspacePressed() {
         if (this._actualPosition > 0) {
             this._actualPosition -= 1;
+            this._actualWord = this._actualWord.slice(0, -1);
             return {
                 type: "delete",
                 position: this._actualPosition,
