@@ -18,11 +18,11 @@ export interface LetterDeleteAction {
 export type KeyAction = LetterAddAction | LetterDeleteAction | null;
 
 export class Game {
-    private _pickedWord: string
-    private _actualWord: string
-    private _actualPosition: number
-    private _turn: number
-    private _wordEvaluator: WordEvaluator
+    private _pickedWord: string;
+    private _actualWord: string;
+    private _actualPosition: number;
+    private _turn: number;
+    private _wordEvaluator: WordEvaluator;
     
     constructor(pickedWord: string, _evaluator: WordEvaluator){
         this._pickedWord = pickedWord;
@@ -91,6 +91,8 @@ export class Game {
     backspacePressed(): LetterDeleteAction | null{
         if (this._actualPosition > 0) {
             this._actualPosition -= 1;
+
+            this._actualWord = this._actualWord.slice(0, -1);
             
             return {
                 type: "delete",

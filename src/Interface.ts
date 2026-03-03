@@ -36,11 +36,11 @@ export class Interface {
         cell.classList.add(stateClasses[state]);
     }
 
-    setKeyState(code: string, state: CellState): void {
-        if (code === "Enter" || code === "Backspace") return;
+    setKeyState(letter: string, state: CellState): void {
+        const keyCode = letter === "Ñ" ? "Semicolon" : "Key" + letter;
 
         const key = document.querySelector(
-            `.key[value="${code}"]`
+            `.key[value="${keyCode}"]`
         ) as HTMLButtonElement | null;
 
         if (!key) return;

@@ -1,22 +1,17 @@
-var Word = /** @class */ (function () {
-    function Word(wordsArray) {
+export class Word {
+    constructor(wordsArray) {
         this._words = wordsArray;
     }
-    Object.defineProperty(Word.prototype, "Words", {
-        get: function () {
-            return this._words;
-        },
-        set: function (wordsArray) {
-            this._words = wordsArray;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Word.prototype.getRandomWord = function () {
-        var min = 0;
-        var max = this._words.length - 1;
-        return this._words[Math.trunc(Math.random() * (max - min + 1))];
-    };
-    return Word;
-}());
-export { Word };
+    get Words() {
+        return this._words;
+    }
+    set Words(wordsArray) {
+        this._words = wordsArray;
+    }
+    getRandomWord() {
+        const min = 0;
+        const max = this._words.length - 1;
+        return this._words[Math.floor(Math.random() * (max - min + 1))];
+    }
+}
+//# sourceMappingURL=Word.js.map
