@@ -24,12 +24,16 @@ export class Game {
     private _turn: number
     private _wordEvaluator: WordEvaluator
     
-    constructor(pickedWord: string){
+    constructor(pickedWord: string, _evaluator: WordEvaluator){
         this._pickedWord = pickedWord;
         this._actualWord = "";
         this._actualPosition = 0;
         this._turn = 1;
-        this._wordEvaluator = new WordEvaluator();
+        this._wordEvaluator = _evaluator;
+    }
+
+    get actualWord(): string{
+        return this._actualWord;
     }
 
     get pickedWord(){

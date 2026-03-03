@@ -4,17 +4,19 @@ import { KeyboardInput } from "./KeyboardInput.js";
 import { NavigationHandler } from "./NavigationHandler.js";
 import { Interface } from "./Interface.js";
 import { GameController } from "./GameController.js";
+import { WordEvaluator } from './WordEvaluator';
 
 const navigation = new NavigationHandler();
 const keyboardInput = new KeyboardInput();
 const ui = new Interface();
+const wordEvaluator = new WordEvaluator();
 
 const wordsCollection: Word = new Word(["JUEGO","TALAR","BAILE","ANDAR","MONTE","PLAYA","PLATA", "ARBOL","QUESO"]);
 
 const pickedWord: string = wordsCollection.getRandomWord();
 console.log(pickedWord); 
 
-const game: Game = new Game(pickedWord);
+const game: Game = new Game(pickedWord, wordEvaluator);
 
 const controller = new GameController(
     game,
