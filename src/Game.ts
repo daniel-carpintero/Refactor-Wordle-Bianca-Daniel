@@ -62,27 +62,30 @@ export class Game {
         return action;
     }
 
-    enterPressed(): {status: GameStatus, evaluation: LetterResult[] | null} {
-        if (this._actualWord.length == MAX_WORD_SIZE){
-            const isWinner = this._actualWord === this.pickedWord;
-            const isLastTurn = this._turn === MAX_ATTEMPTS;
-
-            const evaluation = this._wordEvaluator.evaluateWord(this._pickedWord, this._actualWord);
-
-            this._turn = this._turn + 1;
-            this._actualPosition = 0;
-            this._actualWord = "";
-            
-            if(isWinner){
-                return {status: GameStatus.WIN, evaluation};
-            }
-
-            if(isLastTurn){
-                return {status: GameStatus.LOSE, evaluation};
-            }
+    enterPressed(): {status: GameStatus, evaluation: LetterResult[] | null, evaluatedTurn: number | null} {
+        if(this._actualWord.length !== MAX_WORD_SIZE){
+            return {status: GameStatus.ONGOING, evaluation: null, evaluatedTurn: null};
         }
 
-        return {status: GameStatus.ONGOING, evaluation: null};
+        const isWinner = this._actualWord === this.pickedWord;
+        const isLastTurn = this._turn === MAX_ATTEMPTS;
+
+        const evaluation = this._wordEvaluator.evaluateWord(this._pickedWord, this._actualWord);
+        const evaluatedTurn = this._turn;
+
+        this._turn += 1;
+        this._actualPosition = 0;
+        this._actualWord = "";
+        
+        if(isWinner){
+            return {status: GameStatus.WIN, evaluation, evaluatedTurn};
+        }
+
+        if(isLastTurn){
+            return {status: GameStatus.LOSE, evaluation, evaluatedTurn};
+        }
+        
+        return {status: GameStatus.ONGOING, evaluation, evaluatedTurn};
     }
 
     backspacePressed(): LetterDeleteAction | null{

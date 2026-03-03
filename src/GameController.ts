@@ -24,20 +24,16 @@ export class GameController {
     handleKey(code: string): void {
 
         if (this._keyboard.isEnterKey(code)) {
-
             const currentWord = this._game.actualWord;
-
             const result = this._game.enterPressed();
 
-            if (result.evaluation) {
-                const evaluatedTurn = this._game.turn - 1;
-
+            if (result.evaluation && result.evaluatedTurn !== null) {
                 result.evaluation.forEach((state, index) => {
 
                     if (!state) return; 
 
                     this._interface.setCellState(
-                        evaluatedTurn,
+                        result.evaluatedTurn!,
                         index,
                         state
                     );
