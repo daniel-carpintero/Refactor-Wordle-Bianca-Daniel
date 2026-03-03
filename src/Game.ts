@@ -1,5 +1,6 @@
 import { GameStatus } from "./GameStatus.js";
-import { LetterResult, WordEvaluator } from "./WordEvaluator.js";
+import { LetterResult } from "./WordEvaluator.js";
+import { IWordEvaluator } from "./IWordEvaluator.js";
 
 export interface LetterAddAction {
     type: "add";
@@ -21,9 +22,9 @@ export class Game {
     private _actualWord: string;
     private _actualPosition: number;
     private _turn: number;
-    private _wordEvaluator: WordEvaluator;
+    private readonly _wordEvaluator: IWordEvaluator;
     
-    constructor(pickedWord: string, _evaluator: WordEvaluator, private readonly maxWordSize: number, private readonly maxAttempts: number){
+    constructor(pickedWord: string, _evaluator: IWordEvaluator, private readonly maxWordSize: number, private readonly maxAttempts: number){
         this._pickedWord = pickedWord;
         this._actualWord = "";
         this._actualPosition = 0;
