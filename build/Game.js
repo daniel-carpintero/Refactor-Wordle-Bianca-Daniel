@@ -51,9 +51,9 @@ export class Game {
         return { status: GameStatus.ONGOING, evaluation, evaluatedTurn };
     }
     backspacePressed() {
-        if (this._currentPosition > 0) {
-            this._currentPosition -= 1;
-            this._currentWord = this._currentWord.slice(0, -1);
+        if (this._actualPosition > 0) {
+            this._actualPosition -= 1;
+            this._actualWord = this._actualWord.slice(0, -1);
             return {
                 type: "delete",
                 position: this._currentPosition,
@@ -69,4 +69,3 @@ export class Game {
         };
     }
 }
-//# sourceMappingURL=Game.js.map
