@@ -1,34 +1,26 @@
 export class KeyboardInput {
-    private _validLetterCodes: string[]
+    private readonly _validLetterCodes: string[] = [
+        "KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU", "KeyI", "KeyO", "KeyP",
+        "KeyA", "KeyS", "KeyD", "KeyF", "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL",
+        "KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM",
+        "Semicolon"
+    ];
 
-    constructor(){
-        this._validLetterCodes = ["KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU", "KeyI", "KeyO", "KeyP", "KeyA", "KeyS", "KeyD", "KeyF", "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL", "KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "Semicolon"];
+    isValidLetter(code: string): boolean {
+        return this._validLetterCodes.includes(code);
     }
 
-    get validLetterCodes() {
-        return this._validLetterCodes
-    }
-    set validLetterCodes(letters) {
-        this._validLetterCodes = letters;
+    isEnterKey(code: string): boolean {
+        return code === "Enter";
     }
 
-    isValidLetter(code: string):boolean {
-        return  this._validLetterCodes.includes(code);
+    isBackspaceKey(code: string): boolean {
+        return code === "Backspace";
     }
 
-    isEnterKey(code: string):boolean {
-        return code=="Enter";
+    transformCodeToLetter(code: string): string {
+        if (code === "Semicolon") return "Ñ";
+        if (code.startsWith("Key")) return code.replace("Key", "");
+        return "";
     }
-
-    isBackspaceKey(code: string):boolean{
-        return code=="Backspace";
-    }
-
-     transformCodeToLetter(code: string): string {
-    if (code === "Semicolon") return "Ñ";
-    return code.startsWith("Key")
-        ? code.replace("Key", "").toUpperCase()
-        : "";
-    }
-
 }

@@ -1,4 +1,4 @@
-import {MAX_WORD_SIZE, MAX_ATTEMPTS} from "./env.js";
+import { MAX_WORD_SIZE, MAX_ATTEMPTS } from "./env.js";
 import { GameStatus } from "./GameStatus.js";
 import { LetterResult, WordEvaluator } from "./WordEvaluator.js";
 
@@ -18,85 +18,87 @@ export interface LetterDeleteAction {
 export type KeyAction = LetterAddAction | LetterDeleteAction | null;
 
 export class Game {
-    private _pickedWord: string
-    private _actualWord: string
-    private _actualPosition: number
-    private _turn: number
-    private _wordEvaluator: WordEvaluator
-    
-    constructor(pickedWord: string){
+    private _pickedWord: string;
+    private _currentWord: string;
+    private _currentPosition: number;
+    private _turn: number;
+    private _wordEvaluator: WordEvaluator;
+
+    constructor(pickedWord: string, evaluator: WordEvaluator) {
         this._pickedWord = pickedWord;
-        this._actualWord = "";
-        this._actualPosition = 0;
+        this._currentWord = "";
+        this._currentPosition = 0;
         this._turn = 1;
-        this._wordEvaluator = new WordEvaluator();
+        this._wordEvaluator = evaluator;
     }
 
-    get pickedWord(){
+    get currentWord(): string {
+        return this._currentWord;
+    }
+
+    get pickedWord(): string {
         return this._pickedWord;
     }
 
-    get actualWord() {
-    return this._actualWord;
-}
-
-    get turn(){
+    get turn(): number {
         return this._turn;
     }
 
     addLetter(letter: string): LetterAddAction | null {
-        if(this._actualPosition >= MAX_WORD_SIZE){
+        if (this._currentPosition >= MAX_WORD_SIZE) {
             return null;
         }
 
         const action: LetterAddAction = {
             type: "add",
             letter,
-            position: this._actualPosition,
+            position: this._currentPosition,
             turn: this._turn
         };
 
-        this._actualPosition = this._actualPosition + 1;
-        this._actualWord += letter;
+        this._currentPosition++;
+        this._currentWord += letter;
 
         return action;
     }
 
-    enterPressed(): {status: GameStatus, evaluation: LetterResult[] | null} {
-        if (this._actualWord.length == MAX_WORD_SIZE){
-            const isWinner = this._actualWord === this.pickedWord;
-            const isLastTurn = this._turn === MAX_ATTEMPTS;
-
-            const evaluation = this._wordEvaluator.evaluateWord(this._pickedWord, this._actualWord);
-
-            this._turn = this._turn + 1;
-            this._actualPosition = 0;
-            this._actualWord = "";
-            
-            if(isWinner){
-                return {status: GameStatus.WIN, evaluation};
-            }
-
-            if(isLastTurn){
-                return {status: GameStatus.LOSE, evaluation};
-            }
+    enterPressed(): { status: GameStatus; evaluation: LetterResult[] | null; evaluatedTurn: number | null } {
+        if (this._currentWord.length !== MAX_WORD_SIZE) {
+            return { status: GameStatus.ONGOING, evaluation: null, evaluatedTurn: null };
         }
 
-        return {status: GameStatus.ONGOING, evaluation: null};
-    }
+        const isWinner = this._currentWord === this._pickedWord;
+        const isLastTurn = this._turn === MAX_ATTEMPTS;
+        const evaluation = this._wordEvaluator.evaluateWord(this._pickedWord, this._currentWord);
+        const evaluatedTurn = this._turn;
 
-    backspacePressed(): LetterDeleteAction | null{
-        if (this._actualPosition > 0) {
-            this._actualPosition -= 1;
-            
-            return {
-                type: "delete",
-                position: this._actualPosition,
-                turn: this._turn
-            };
+        this._turn++;
+        this._currentPosition = 0;
+        this._currentWord = "";
+
+        if (isWinner) {
+            return { status: GameStatus.WIN, evaluation, evaluatedTurn };
         }
 
-        return null;
+        if (isLastTurn) {
+            return { status: GameStatus.LOSE, evaluation, evaluatedTurn };
+        }
+
+        return { status: GameStatus.ONGOING, evaluation, evaluatedTurn };
     }
-    
+
+    backspacePressed(): LetterDeleteAction | null {
+        if (this._currentPosition <= 0) {
+            return null;
+        }
+
+        this._currentPosition--;
+        this._currentWord = this._currentWord.slice(0, -1);
+
+        return {
+            type: "delete",
+            position: this._currentPosition,
+            turn: this._turn
+        };
+    }
 }

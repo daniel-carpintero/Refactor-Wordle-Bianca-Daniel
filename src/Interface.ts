@@ -1,24 +1,35 @@
 export type CellState = "right" | "misplaced" | "wrong";
 
+const CELL_STATE_CLASSES: Record<CellState, string> = {
+    right: "cell-green",
+    misplaced: "cell-orange",
+    wrong: "cell-grey"
+};
+
+const KEY_STATE_CLASSES: Record<CellState, string> = {
+    right: "key-green",
+    misplaced: "key-orange",
+    wrong: "key-grey"
+};
+
+const STATE_PRIORITY: Record<CellState, number> = {
+    right: 3,
+    misplaced: 2,
+    wrong: 1
+};
+
 export class Interface {
 
     private getRow(turn: number): HTMLElement {
-    const row = document.getElementById(`row_${turn}`);
-    if (!row) {
-        console.error(`Row not found: ${turn}`);
-        return document.createElement("div"); 
+        const row = document.getElementById(`row_${turn}`);
+        if (!row) throw new Error(`Row not found for turn: ${turn}`);
+        return row;
     }
-    return row;
-}
 
     private getCell(turn: number, position: number): HTMLElement {
         const row = this.getRow(turn);
-        const cell = row.children[position] as HTMLElement;
-
-        if (!cell) {
-            console.error(`Cell not found at turn ${turn}, position ${position}`);
-            return document.createElement("div"); 
-        }
+        const cell = row.children[position] as HTMLElement | undefined;
+        if (!cell) throw new Error(`Cell not found at turn ${turn}, position ${position}`);
         return cell;
     }
 
@@ -31,46 +42,20 @@ export class Interface {
     }
 
     setCellState(turn: number, position: number, state: CellState): void {
-        const cell = this.getCell(turn, position);
-
-        const stateClasses: Record<CellState, string> = {
-            right: "cell-green",
-            misplaced: "cell-orange",
-            wrong: "cell-grey"
-        };
-
-        cell.classList.add(stateClasses[state]);
+        this.getCell(turn, position).classList.add(CELL_STATE_CLASSES[state]);
     }
 
-    setKeyState(code: string | undefined, state: CellState): void {
-        if (!code) return;
-        if (code === "Enter" || code === "Backspace") return;
-
-        const key = document.querySelector(
-            `.key[value="${code}"]`
-        ) as HTMLButtonElement | null;
-
+    setKeyState(letter: string, state: CellState): void {
+        const key = document.querySelector(`.key[value="${letter}"]`) as HTMLButtonElement | null;
         if (!key) return;
 
-        const statePriority: Record<CellState, number> = {
-            right: 3,
-            misplaced: 2,
-            wrong: 1
-        };
-
         const currentState = key.dataset.state as CellState | undefined;
+        const isHigherPriority = !currentState || STATE_PRIORITY[state] > STATE_PRIORITY[currentState];
 
-        if (!currentState || statePriority[state] > statePriority[currentState]) {
-            key.dataset.state = state;
-            key.classList.remove("key-green", "key-orange", "key-grey");
+        if (!isHigherPriority) return;
 
-            const stateClasses: Record<CellState, string> = {
-                right: "key-green",
-                misplaced: "key-orange",
-                wrong: "key-grey"
-            };
-
-            key.classList.add(stateClasses[state]);
-        }
+        key.dataset.state = state;
+        key.classList.remove("key-green", "key-orange", "key-grey");
+        key.classList.add(KEY_STATE_CLASSES[state]);
     }
 }
