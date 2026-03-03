@@ -4,3 +4,10 @@ export var GameStatus;
     GameStatus[GameStatus["WIN"] = 1] = "WIN";
     GameStatus[GameStatus["LOSE"] = 2] = "LOSE";
 })(GameStatus || (GameStatus = {}));
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+//# sourceMappingURL=GameStatus.js.map
+=======
+>>>>>>> origin/refactor/bianca.craciun
+>>>>>>> origin/refactor/daniel.carpintero

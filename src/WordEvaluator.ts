@@ -1,8 +1,12 @@
 import {MAX_WORD_SIZE} from "./env.js";
+<<<<<<< HEAD
+=======
+import { IWordEvaluator } from "./IWordEvaluator.js";
+>>>>>>> origin/refactor/daniel.carpintero
 
 export type LetterResult = "right" | "misplaced" | "wrong" | null;
 
-export class WordEvaluator {
+export class WordEvaluator implements IWordEvaluator{
     evaluateWord(pickedWord: string, currentWord: string): LetterResult[] {
         const results: LetterResult[] = new Array(MAX_WORD_SIZE).fill("wrong");
         const pickedLetters = pickedWord.split("");
