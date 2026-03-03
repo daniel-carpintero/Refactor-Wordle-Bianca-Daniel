@@ -45,7 +45,7 @@ export class GameController {
     }
 
     private handleEnter(): void {
-        const currentWord = this._game.actualWord;
+        const currentWord = this._game.currentWord;
         const result = this._game.enterPressed();
 
         if (result.evaluation && result.evaluatedTurn !== null) {
