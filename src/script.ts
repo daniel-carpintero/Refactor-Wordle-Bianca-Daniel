@@ -12,10 +12,12 @@ const keyboardInput = new KeyboardInput();
 const ui = new Interface();
 const wordEvaluator = new WordEvaluator();
 
-const wordsCollection: Word = new Word(["JUEGO","TALAR","BAILE","ANDAR","MONTE","PLAYA","PLATA", "ARBOL","QUESO"]);
+const wordCollection = new Word([
+    "JUEGO", "TALAR", "BAILE", "ANDAR", "MONTE",
+    "PLAYA", "PLATA", "ARBOL", "QUESO"
+]);
 
-const pickedWord: string = wordsCollection.getRandomWord();
-console.log(pickedWord); 
+const pickedWord = wordCollection.getRandomWord();
 
 const game: Game = new Game(pickedWord, wordEvaluator, MAX_WORD_SIZE, MAX_ATTEMPTS);
 
@@ -26,11 +28,11 @@ const controller = new GameController(
     keyboardInput
 );
 
-Array.from(document.getElementsByClassName("key")).forEach(element =>
+Array.from(document.getElementsByClassName("key")).forEach(element => {
     element.addEventListener("click", (e) => {
         controller.handleKey((e.target as HTMLButtonElement).value);
-    })
-);
+    });
+});
 
 document.addEventListener("keydown", (e) => {
     controller.handleKey(e.code);

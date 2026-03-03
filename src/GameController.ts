@@ -2,12 +2,40 @@ import { Game } from "./Game";
 import { Interface, CellState } from "./Interface";
 import { KeyboardInput } from "./KeyboardInput";
 import { NavigationHandler } from "./NavigationHandler";
+import { LetterResult } from "./WordEvaluator";
+import { GameStatus } from "./GameStatus";
+
+interface IGame {
+    readonly currentWord: string;
+    readonly turn: number;
+    addLetter(letter: string): ReturnType<Game["addLetter"]>;
+    enterPressed(): ReturnType<Game["enterPressed"]>;
+    backspacePressed(): ReturnType<Game["backspacePressed"]>;
+}
+
+interface IInterface {
+    setLetter(turn: number, position: number, letter: string): void;
+    clearLetter(turn: number, position: number): void;
+    setCellState(turn: number, position: number, state: NonNullable<LetterResult>): void;
+    setKeyState(letter: string, state: NonNullable<LetterResult>): void;
+}
+
+interface IKeyboardInput {
+    isEnterKey(code: string): boolean;
+    isBackspaceKey(code: string): boolean;
+    isValidLetter(code: string): boolean;
+    transformCodeToLetter(code: string): string;
+}
+
+interface INavigationHandler {
+    navigate(status: GameStatus): void;
+}
 
 export class GameController {
-    private _game: Game;
-    private _interface: Interface;
-    private _navigation: NavigationHandler;
-    private _keyboard: KeyboardInput;
+    private _game: IGame;
+    private _interface: IInterface;
+    private _navigation: INavigationHandler;
+    private _keyboard: IKeyboardInput;
 
     constructor(game: Game, ui: Interface, navigation: NavigationHandler, keyboard: KeyboardInput) {
         this._game = game;
@@ -17,7 +45,7 @@ export class GameController {
     }
 
     private handleEnter(): void {
-        const currentWord = this._game.actualWord;
+        const currentWord = this._game.currentWord;
         const result = this._game.enterPressed();
 
         if (result.evaluation && result.evaluatedTurn !== null) {
