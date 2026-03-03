@@ -46,7 +46,12 @@ export class Interface {
     }
 
     setKeyState(letter: string, state: CellState): void {
-        const key = document.querySelector(`.key[value="${letter}"]`) as HTMLButtonElement | null;
+        const keyCode = letter === "Ñ" ? "Semicolon" : "Key" + letter;
+
+        const key = document.querySelector(
+            `.key[value="${keyCode}"]`
+        ) as HTMLButtonElement | null;
+
         if (!key) return;
 
         const currentState = key.dataset.state as CellState | undefined;

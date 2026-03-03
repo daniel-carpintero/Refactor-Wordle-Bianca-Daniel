@@ -87,9 +87,17 @@ export class Game {
         return { status: GameStatus.ONGOING, evaluation, evaluatedTurn };
     }
 
-    backspacePressed(): LetterDeleteAction | null {
-        if (this._currentPosition <= 0) {
-            return null;
+    backspacePressed(): LetterDeleteAction | null{
+        if (this._currentPosition > 0) {
+            this._currentPosition -= 1;
+
+            this._currentWord = this._currentWord.slice(0, -1);
+            
+            return {
+                type: "delete",
+                position: this._currentPosition,
+                turn: this._turn
+            };
         }
 
         this._currentPosition--;

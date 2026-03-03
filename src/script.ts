@@ -4,7 +4,7 @@ import { KeyboardInput } from "./KeyboardInput.js";
 import { NavigationHandler } from "./NavigationHandler.js";
 import { Interface } from "./Interface.js";
 import { GameController } from "./GameController.js";
-import { WordEvaluator } from "./WordEvaluator.js";
+import { WordEvaluator } from './WordEvaluator.js';
 
 const navigation = new NavigationHandler();
 const keyboardInput = new KeyboardInput();
