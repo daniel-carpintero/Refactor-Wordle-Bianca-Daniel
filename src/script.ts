@@ -29,11 +29,11 @@ const controller = new GameController(
 );
 
 Array.from(document.getElementsByClassName("key")).forEach(element => {
-    element.addEventListener("click", (e) => {
-        controller.handleKey((e.target as HTMLButtonElement).value);
+    element.addEventListener("click", (event) => {
+        controller.handleKey((event.target as HTMLButtonElement).value);
     });
 });
 
-document.addEventListener("keydown", (e) => {
-    controller.handleKey(e.code);
+document.addEventListener("keydown", (event) => {
+    controller.handleKey(event.code);
 });
