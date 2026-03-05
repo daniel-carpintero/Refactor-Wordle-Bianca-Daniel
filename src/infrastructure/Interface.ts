@@ -1,5 +1,5 @@
-import { IInterface } from "../interfaces/IInterface";
-import { LetterResult } from "../domain/WordEvaluator";
+import { IInterface } from "../interfaces/IInterface.js";
+import { LetterResult } from "../domain/WordEvaluator.js";
 
 export type CellState = "right" | "misplaced" | "wrong";
 

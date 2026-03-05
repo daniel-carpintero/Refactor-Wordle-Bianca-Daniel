@@ -1,5 +1,3 @@
-import { Game } from "../domain/Game.js";
-import { LetterResult } from "../domain/WordEvaluator.js";
 import { IGame } from "../interfaces/IGame.js";
 import { IInterface } from "../interfaces/IInterface.js";
 import { IKeyboardInput } from "../interfaces/IKeyboardInput.js";
@@ -11,7 +9,7 @@ export class GameController {
     private _navigation: INavigationHandler;
     private _keyboard: IKeyboardInput;
 
-    constructor(game: Game, ui: IInterface, navigation: INavigationHandler, keyboard: IKeyboardInput) {
+    constructor(game: IGame, ui: IInterface, navigation: INavigationHandler, keyboard: IKeyboardInput) {
         this._game = game;
         this._interface = ui;
         this._navigation = navigation;

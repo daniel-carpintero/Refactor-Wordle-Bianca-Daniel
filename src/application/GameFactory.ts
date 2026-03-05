@@ -1,4 +1,5 @@
 import { Word } from "../domain/Word.js";
+import { IGame } from "../interfaces/IGame.js";
 import { Game } from "../domain/Game.js";
 import { KeyboardInput } from "../infrastructure/KeyboardInput.js";
 import { NavigationHandler } from "../infrastructure/NavigationHandler.js";
@@ -20,7 +21,7 @@ export function createGameController(): GameController {
     
     const pickedWord = wordCollection.getRandomWord();
 
-    const game: Game = new Game(pickedWord, wordEvaluator, MAX_WORD_SIZE, MAX_ATTEMPTS);
+    const game: IGame = new Game(pickedWord, wordEvaluator, MAX_WORD_SIZE, MAX_ATTEMPTS);
 
     return new GameController(
         game,
