@@ -1,4 +1,4 @@
-import { IKeyboardInput } from "./interfaces/IKeyboardInput";
+import { IKeyboardInput } from "../interfaces/IKeyboardInput";
 
 export class KeyboardInput implements IKeyboardInput {
     private readonly _validLetterCodes: string[] = [
