@@ -1,4 +1,4 @@
-import { GameStatus } from "./GameStatus.js";
+import { GameStatus } from "../domain/GameStatus.js";
 export class NavigationHandler {
     navigate(status) {
         if (status == GameStatus.WIN) {

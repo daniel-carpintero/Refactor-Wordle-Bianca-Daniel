@@ -1,4 +1,4 @@
-import { createGameController } from "./application/GameFactory";
+import { createGameController } from "./application/GameFactory.js";
 
 const controller = createGameController();
 

@@ -6,26 +6,17 @@ import { Interface } from "../infrastructure/Interface.js";
 import { GameController } from "./GameController.js";
 import { WordEvaluator } from "../domain/WordEvaluator.js";
 import { MAX_WORD_SIZE, MAX_ATTEMPTS } from "../config/env.js";
-
-export function createGameController(): GameController {
+export function createGameController() {
     const navigation = new NavigationHandler();
     const keyboardInput = new KeyboardInput();
     const ui = new Interface();
     const wordEvaluator = new WordEvaluator(MAX_WORD_SIZE);
-
     const wordCollection = new Word([
         "JUEGO", "TALAR", "BAILE", "ANDAR", "MONTE",
         "PLAYA", "PLATA", "ARBOL", "QUESO"
     ]);
-    
     const pickedWord = wordCollection.getRandomWord();
-
-    const game: Game = new Game(pickedWord, wordEvaluator, MAX_WORD_SIZE, MAX_ATTEMPTS);
-
-    return new GameController(
-        game,
-        ui,
-        navigation,
-        keyboardInput
-    );
+    const game = new Game(pickedWord, wordEvaluator, MAX_WORD_SIZE, MAX_ATTEMPTS);
+    return new GameController(game, ui, navigation, keyboardInput);
 }
+//# sourceMappingURL=GameFactory.js.map

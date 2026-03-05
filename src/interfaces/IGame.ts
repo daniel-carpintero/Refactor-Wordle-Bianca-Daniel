@@ -1,4 +1,4 @@
-import { Game } from "../domain/Game";
+import { Game } from "../domain/Game.js";
 
 export interface IGame {
     readonly currentWord: string;

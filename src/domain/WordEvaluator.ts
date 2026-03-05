@@ -1,4 +1,4 @@
-import { IWordEvaluator } from "../interfaces/IWordEvaluator";
+import { IWordEvaluator } from "../interfaces/IWordEvaluator.js";
 
 export type LetterResult = "right" | "misplaced" | "wrong" | null;
 

@@ -1,5 +1,5 @@
-import { GameStatus } from "../domain/GameStatus";
-import { INavigationHandler } from "../interfaces/INavigationHandler";
+import { GameStatus } from "../domain/GameStatus.js";
+import { INavigationHandler } from "../interfaces/INavigationHandler.js";
 
 export class NavigationHandler implements INavigationHandler{
     navigate(status: GameStatus) {

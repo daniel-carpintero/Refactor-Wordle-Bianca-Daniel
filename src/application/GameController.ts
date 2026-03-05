@@ -1,9 +1,9 @@
-import { Game } from "../domain/Game";
-import { LetterResult } from "../domain/WordEvaluator";
-import { IGame } from "../interfaces/IGame";
-import { IInterface } from "../interfaces/IInterface";
-import { IKeyboardInput } from "../interfaces/IKeyboardInput";
-import { INavigationHandler } from "../interfaces/INavigationHandler";
+import { Game } from "../domain/Game.js";
+import { LetterResult } from "../domain/WordEvaluator.js";
+import { IGame } from "../interfaces/IGame.js";
+import { IInterface } from "../interfaces/IInterface.js";
+import { IKeyboardInput } from "../interfaces/IKeyboardInput.js";
+import { INavigationHandler } from "../interfaces/INavigationHandler.js";
 
 export class GameController {
     private _game: IGame;
