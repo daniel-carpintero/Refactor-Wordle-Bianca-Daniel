@@ -1,9 +1,12 @@
-import { Game } from "../domain/Game.js";
+import { GameStatus } from "../domain/GameStatus.js";
+import { ILetterAddAction } from "./ILetterAddAction.js";
+import { LetterResult } from '../domain/WordEvaluator';
+import { ILetterDeleteAction } from "./ILetterDeleteAction.js";
 
 export interface IGame {
     readonly currentWord: string;
     readonly turn: number;
-    addLetter(letter: string): ReturnType<Game["addLetter"]>;
-    enterPressed(): ReturnType<Game["enterPressed"]>;
-    backspacePressed(): ReturnType<Game["backspacePressed"]>;
+    addLetter(letter: string): ILetterAddAction | null;
+    enterPressed(): {status: GameStatus; evaluation: LetterResult[] | null; evaluatedTurn: number | null;};
+    backspacePressed(): ILetterDeleteAction | null;
 }

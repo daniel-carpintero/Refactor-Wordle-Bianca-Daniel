@@ -8,11 +8,13 @@ export class GameController {
     handleEnter() {
         const currentWord = this._game.currentWord;
         const result = this._game.enterPressed();
-        if (result.evaluation && result.evaluatedTurn !== null) {
-            result.evaluation.forEach((state, index) => {
+        const evaluation = result.evaluation;
+        const turn = result.evaluatedTurn;
+        if (evaluation && turn !== null) {
+            evaluation.forEach((state, index) => {
                 if (!state)
                     return;
-                this._interface.setCellState(result.evaluatedTurn, index, state);
+                this._interface.setCellState(turn, index, state);
                 const letter = currentWord[index];
                 this._interface.setKeyState(letter, state);
             });

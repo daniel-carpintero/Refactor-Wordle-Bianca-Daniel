@@ -22,13 +22,15 @@ export class GameController {
         const currentWord = this._game.currentWord;
         const result = this._game.enterPressed();
 
-        if (result.evaluation && result.evaluatedTurn !== null) {
-            result.evaluation.forEach((state: LetterResult, index: number) => {
+        const evaluation = result.evaluation;
+        const turn = result.evaluatedTurn;
 
+        if (evaluation && turn !== null) {
+            evaluation.forEach((state: LetterResult, index: number) => {
                 if (!state) return; 
 
                 this._interface.setCellState(
-                    result.evaluatedTurn!,
+                    turn,
                     index,
                     state
                 );
