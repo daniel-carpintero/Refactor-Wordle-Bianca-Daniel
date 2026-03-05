@@ -1,9 +1,9 @@
 import { GameStatus } from "./GameStatus.js";
 import { LetterResult } from "./WordEvaluator.js";
-import { IWordEvaluator } from "./interfaces/IWordEvaluator.js";
-import { ILetterAddAction } from "./interfaces/ILetterAddAction.js";
-import { ILetterDeleteAction } from "./interfaces/ILetterDeleteAction.js";
-import { IGame } from "./interfaces/IGame.js";
+import { IWordEvaluator } from "../interfaces/IWordEvaluator.js";
+import { ILetterAddAction } from "../interfaces/ILetterAddAction.js";
+import { ILetterDeleteAction } from "../interfaces/ILetterDeleteAction.js";
+import { IGame } from "../interfaces/IGame.js";
 
 export type KeyAction = ILetterAddAction | ILetterDeleteAction | null;
 

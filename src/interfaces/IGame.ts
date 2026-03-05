@@ -1,4 +1,4 @@
-import { Game } from "../Game";
+import { Game } from "../domain/Game";
 
 export interface IGame {
     readonly currentWord: string;

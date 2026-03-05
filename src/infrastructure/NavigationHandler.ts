@@ -1,4 +1,4 @@
-import { GameStatus } from "./GameStatus.js";
+import { GameStatus } from "./domain/GameStatus";
 import { INavigationHandler } from "./interfaces/INavigationHandler.js";
 
 export class NavigationHandler implements INavigationHandler{

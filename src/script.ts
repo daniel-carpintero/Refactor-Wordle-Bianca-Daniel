@@ -1,11 +1,11 @@
-import { Word } from "./Word.js";
-import { Game } from "./Game.js";
-import { KeyboardInput } from "./KeyboardInput.js";
-import { NavigationHandler } from "./NavigationHandler.js";
-import { Interface } from "./Interface.js";
-import { GameController } from "./GameController.js";
-import { WordEvaluator } from './WordEvaluator.js';
-import { MAX_WORD_SIZE, MAX_ATTEMPTS } from "./env.js";
+import { Word } from "./domain/Word.js";
+import { Game } from "./domain/Game.js";
+import { KeyboardInput } from "./infrastructure/KeyboardInput.js";
+import { NavigationHandler } from "./infrastructure/NavigationHandler.js";
+import { Interface } from "./infrastructure/Interface.js";
+import { GameController } from "./application/GameController.js";
+import { WordEvaluator } from "./domain/WordEvaluator.js";
+import { MAX_WORD_SIZE, MAX_ATTEMPTS } from "./config/env.js";
 
 const navigation = new NavigationHandler();
 const keyboardInput = new KeyboardInput();

@@ -1,4 +1,4 @@
-import { LetterResult } from "../WordEvaluator";
+import { LetterResult } from "../domain/WordEvaluator";
 
 export interface IInterface {
     setLetter(turn: number, position: number, letter: string): void;
