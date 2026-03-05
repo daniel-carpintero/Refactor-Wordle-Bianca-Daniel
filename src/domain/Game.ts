@@ -1,9 +1,9 @@
 import { GameStatus } from "./GameStatus.js";
-import { LetterResult } from "./WordEvaluator.js";
 import { IWordEvaluator } from "../interfaces/IWordEvaluator.js";
 import { LetterAddAction } from "../types/letterAddAction.js";
 import { LetterDeleteAction } from "../types/letterDeleteAction.js";
 import { IGame } from "../interfaces/IGame";
+import { TurnResult } from "../types/TurnResult.js";
 
 export type KeyAction = LetterAddAction | LetterDeleteAction | null;
 
@@ -52,7 +52,7 @@ export class Game implements IGame{
         return action;
     }
 
-    enterPressed(): {status: GameStatus, evaluation: LetterResult[] | null, evaluatedTurn: number | null} {
+    enterPressed(): TurnResult {
         if(this._currentWord.length !== this.maxWordSize){
             return {status: GameStatus.ONGOING, evaluation: null, evaluatedTurn: null};
         }
