@@ -26,18 +26,7 @@ export class GameController {
         const turn = result.evaluatedTurn;
 
         if (evaluation && turn !== null) {
-            evaluation.forEach((state: LetterResult, index: number) => {
-                if (!state) return; 
-
-                this._interface.setCellState(
-                    turn,
-                    index,
-                    state
-                );
-
-                const letter = currentWord[index];
-                this._interface.setKeyState(letter, state);
-            });
+            this._interface.renderEvaluation(turn, currentWord, evaluation);
         }
 
         this._navigation.navigate(result.status);

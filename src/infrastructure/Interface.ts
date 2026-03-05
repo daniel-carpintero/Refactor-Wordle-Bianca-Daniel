@@ -1,3 +1,6 @@
+import { IInterface } from "../interfaces/IInterface";
+import { LetterResult } from "../domain/WordEvaluator";
+
 export type CellState = "right" | "misplaced" | "wrong";
 
 const CELL_STATE_CLASSES: Record<CellState, string> = {
@@ -18,7 +21,7 @@ const STATE_PRIORITY: Record<CellState, number> = {
     wrong: 1
 };
 
-export class Interface {
+export class Interface implements IInterface{
 
     private getRow(turn: number): HTMLElement {
         const row = document.getElementById(`row_${turn}`);
@@ -62,5 +65,17 @@ export class Interface {
         key.dataset.state = state;
         key.classList.remove("key-green", "key-orange", "key-grey");
         key.classList.add(KEY_STATE_CLASSES[state]);
+    }
+
+    renderEvaluation(turn: number, currentWord: string, evaluation: LetterResult[]): void {
+        evaluation.forEach((state, index) => {
+            if(!state) return;
+
+            this.setCellState(turn, index, state);
+
+            const letter = currentWord[index];
+            this.setKeyState(letter, state);
+        });
+
     }
 }
