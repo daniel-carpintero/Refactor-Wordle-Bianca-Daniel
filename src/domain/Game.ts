@@ -1,17 +1,17 @@
 import { GameStatus } from "./GameStatus.js";
 import { LetterResult } from "./WordEvaluator.js";
 import { IWordEvaluator } from "../interfaces/IWordEvaluator.js";
-import { ILetterAddAction } from "../types/ILetterAddAction.js";
-import { ILetterDeleteAction } from "../types/ILetterDeleteAction.js";
+import { LetterAddAction } from "../types/letterAddAction.js";
+import { LetterDeleteAction } from "../types/letterDeleteAction.js";
 import { IGame } from "../interfaces/IGame";
 
-export type KeyAction = ILetterAddAction | ILetterDeleteAction | null;
+export type KeyAction = LetterAddAction | LetterDeleteAction | null;
 
 export class Game implements IGame{
     private _pickedWord: string;
     private _currentWord: string;
     private _currentPosition: number;
-    private _turn: number;
+    private _turn: number;  
     private readonly _wordEvaluator: IWordEvaluator;
     
     constructor(pickedWord: string, _evaluator: IWordEvaluator, private readonly maxWordSize: number, private readonly maxAttempts: number){
@@ -34,12 +34,12 @@ export class Game implements IGame{
         return this._turn;
     }
 
-    addLetter(letter: string): ILetterAddAction | null {
+    addLetter(letter: string): LetterAddAction | null {
         if(this._currentPosition >= this.maxWordSize){
             return null;
         }
 
-        const action: ILetterAddAction = {
+        const action: LetterAddAction = {
             type: "add",
             letter,
             position: this._currentPosition,
@@ -78,7 +78,7 @@ export class Game implements IGame{
         return { status: GameStatus.ONGOING, evaluation, evaluatedTurn };
     }
 
-    backspacePressed(): ILetterDeleteAction | null {
+    backspacePressed(): LetterDeleteAction | null {
     if (this._currentPosition <= 0) {
         return null;  
     }
