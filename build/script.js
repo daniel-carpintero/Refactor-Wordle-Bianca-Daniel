@@ -9,7 +9,7 @@ import { MAX_WORD_SIZE, MAX_ATTEMPTS } from "./env.js";
 const navigation = new NavigationHandler();
 const keyboardInput = new KeyboardInput();
 const ui = new Interface();
-const wordEvaluator = new WordEvaluator();
+const wordEvaluator = new WordEvaluator(MAX_WORD_SIZE);
 const wordCollection = new Word([
     "JUEGO", "TALAR", "BAILE", "ANDAR", "MONTE",
     "PLAYA", "PLATA", "ARBOL", "QUESO"

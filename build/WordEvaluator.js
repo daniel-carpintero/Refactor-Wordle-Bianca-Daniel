@@ -1,15 +1,17 @@
-import { MAX_WORD_SIZE } from "./env.js";
 export class WordEvaluator {
+    constructor(maxWordSize) {
+        this.maxWordSize = maxWordSize;
+    }
     evaluateWord(pickedWord, currentWord) {
-        const results = new Array(MAX_WORD_SIZE).fill("wrong");
+        const results = new Array(this.maxWordSize).fill("wrong");
         const pickedLetters = pickedWord.split("");
-        for (let i = 0; i < MAX_WORD_SIZE; i++) {
+        for (let i = 0; i < this.maxWordSize; i++) {
             if (currentWord[i] === pickedLetters[i]) {
                 results[i] = "right";
                 pickedLetters[i] = "";
             }
         }
-        for (let i = 0; i < MAX_WORD_SIZE; i++) {
+        for (let i = 0; i < this.maxWordSize; i++) {
             if (results[i] !== "right") {
                 const indexInPicked = pickedLetters.indexOf(currentWord[i]);
                 if (indexInPicked !== -1) {

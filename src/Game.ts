@@ -1,23 +1,13 @@
 import { GameStatus } from "./GameStatus.js";
 import { LetterResult } from "./WordEvaluator.js";
-import { IWordEvaluator } from "./IWordEvaluator.js";
+import { IWordEvaluator } from "./interfaces/IWordEvaluator.js";
+import { ILetterAddAction } from "./interfaces/ILetterAddAction.js";
+import { ILetterDeleteAction } from "./interfaces/ILetterDeleteAction.js";
+import { IGame } from "./interfaces/IGame.js";
 
-export interface LetterAddAction {
-    type: "add";
-    letter: string;
-    position: number;
-    turn: number;
-}
+export type KeyAction = ILetterAddAction | ILetterDeleteAction | null;
 
-export interface LetterDeleteAction {
-    type: "delete";
-    position: number;
-    turn: number;
-}
-
-export type KeyAction = LetterAddAction | LetterDeleteAction | null;
-
-export class Game {
+export class Game implements IGame{
     private _pickedWord: string;
     private _currentWord: string;
     private _currentPosition: number;
@@ -44,12 +34,12 @@ export class Game {
         return this._turn;
     }
 
-    addLetter(letter: string): LetterAddAction | null {
+    addLetter(letter: string): ILetterAddAction | null {
         if(this._currentPosition >= this.maxWordSize){
             return null;
         }
 
-        const action: LetterAddAction = {
+        const action: ILetterAddAction = {
             type: "add",
             letter,
             position: this._currentPosition,
@@ -88,7 +78,7 @@ export class Game {
         return { status: GameStatus.ONGOING, evaluation, evaluatedTurn };
     }
 
-    backspacePressed(): LetterDeleteAction | null {
+    backspacePressed(): ILetterDeleteAction | null {
     if (this._currentPosition <= 0) {
         return null;  
     }

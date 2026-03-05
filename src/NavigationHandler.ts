@@ -1,6 +1,7 @@
 import { GameStatus } from "./GameStatus.js";
+import { INavigationHandler } from "./interfaces/INavigationHandler.js";
 
-export class NavigationHandler {
+export class NavigationHandler implements INavigationHandler{
     navigate(status: GameStatus) {
         if(status == GameStatus.WIN){
             location.assign("/winner");

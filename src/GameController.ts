@@ -1,35 +1,9 @@
 import { Game } from "./Game";
-import { Interface, CellState } from "./Interface";
-import { KeyboardInput } from "./KeyboardInput";
-import { NavigationHandler } from "./NavigationHandler";
 import { LetterResult } from "./WordEvaluator";
-import { GameStatus } from "./GameStatus";
-
-interface IGame {
-    readonly currentWord: string;
-    readonly turn: number;
-    addLetter(letter: string): ReturnType<Game["addLetter"]>;
-    enterPressed(): ReturnType<Game["enterPressed"]>;
-    backspacePressed(): ReturnType<Game["backspacePressed"]>;
-}
-
-interface IInterface {
-    setLetter(turn: number, position: number, letter: string): void;
-    clearLetter(turn: number, position: number): void;
-    setCellState(turn: number, position: number, state: NonNullable<LetterResult>): void;
-    setKeyState(letter: string, state: NonNullable<LetterResult>): void;
-}
-
-interface IKeyboardInput {
-    isEnterKey(code: string): boolean;
-    isBackspaceKey(code: string): boolean;
-    isValidLetter(code: string): boolean;
-    transformCodeToLetter(code: string): string;
-}
-
-interface INavigationHandler {
-    navigate(status: GameStatus): void;
-}
+import { IGame } from "./interfaces/IGame";
+import { IInterface } from "./interfaces/IInterface";
+import { IKeyboardInput } from "./interfaces/IKeyboardInput";
+import { INavigationHandler } from "./interfaces/INavigationHandler";
 
 export class GameController {
     private _game: IGame;
@@ -37,7 +11,7 @@ export class GameController {
     private _navigation: INavigationHandler;
     private _keyboard: IKeyboardInput;
 
-    constructor(game: Game, ui: Interface, navigation: NavigationHandler, keyboard: KeyboardInput) {
+    constructor(game: Game, ui: IInterface, navigation: INavigationHandler, keyboard: IKeyboardInput) {
         this._game = game;
         this._interface = ui;
         this._navigation = navigation;
@@ -49,7 +23,7 @@ export class GameController {
         const result = this._game.enterPressed();
 
         if (result.evaluation && result.evaluatedTurn !== null) {
-            result.evaluation.forEach((state, index) => {
+            result.evaluation.forEach((state: LetterResult, index: number) => {
 
                 if (!state) return; 
 

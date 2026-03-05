@@ -1,4 +1,6 @@
-export class KeyboardInput {
+import { IKeyboardInput } from "./interfaces/IKeyboardInput";
+
+export class KeyboardInput implements IKeyboardInput {
     private readonly _validLetterCodes: string[] = [
         "KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU", "KeyI", "KeyO", "KeyP",
         "KeyA", "KeyS", "KeyD", "KeyF", "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL",
