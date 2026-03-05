@@ -1,7 +1,7 @@
 import { GameStatus } from "../domain/GameStatus.js";
-import { ILetterAddAction } from "./ILetterAddAction.js";
+import { ILetterAddAction } from "../types/letterAddAction.js";
 import { LetterResult } from '../domain/WordEvaluator';
-import { ILetterDeleteAction } from "./ILetterDeleteAction.js";
+import { ILetterDeleteAction } from "../types/letterDeleteAction.js";
 
 export interface IGame {
     readonly currentWord: string;
