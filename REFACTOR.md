@@ -2,27 +2,94 @@
 
 ## ¿Qué se refactorizó y por qué?
 
-El proyecto partía de un diseño monolítico donde la clase `Game` actuaba como un God Object: gestionaba el estado del juego, manipulaba el DOM, validaba el teclado, evaluaba letras y controlaba la navegación, todo en un mismo sitio. Cualquier cambio en una de estas partes afectaba inevitablemente a las demás, haciendo el código difícil de mantener y de testear.
+1. Contexto inicial del proyecto
+El proyecto partía de una implementación monolítica donde la clase Game concentraba la mayoría de responsabilidades: gestión del estado, validación de entradas, manipulación del DOM, evaluación de palabras y control de navegación. Este acoplamiento hacía difícil extender o testear el código.
 
-La refactorización divide esas responsabilidades en clases independientes siguiendo los principios SOLID. `Game` pasa a ser un modelo puro que solo gestiona el estado. `WordEvaluator` se encarga exclusivamente de comparar la palabra introducida con la objetivo. `KeyboardInput` maneja la validación y transformación de teclas. `Interface` centraliza toda interacción con el DOM. `NavigationHandler` decide cuándo redirigir al jugador. Y `GameController` actúa como orquestador, recibiendo todas estas piezas por inyección de dependencias y coordinándolas sin contener lógica de negocio propia.
+2. Refactorización hacia una arquitectura modular
+La refactorización reorganizó el proyecto en una estructura más clara y separada por capas, distribuyendo responsabilidades en módulos independientes:
 
-En una iteración posterior se añadieron dos mejoras adicionales orientadas al desacoplamiento. Por un lado, se extrajo la interfaz `IWordEvaluator` a su propio archivo, de modo que `Game` ya no depende de la clase concreta `WordEvaluator` sino de una abstracción; esto permite sustituir el evaluador por cualquier otra implementación sin tocar la lógica del juego. Por otro lado, `Game` dejó de importar las constantes globales de `env.ts` y empezó a recibirlas como parámetros de constructor (`maxWordSize` y `maxAttempts`), eliminando la dependencia implícita a un módulo externo y haciendo la clase completamente autocontenida y testeable de forma aislada.
+domain/ contiene la lógica central del juego:
+Game gestiona el estado interno.
+WordEvaluator evalúa las palabras.
+Word, GameStatus y otros modelos encapsulan conceptos del dominio.
 
-Además se corrigieron dos bugs: el algoritmo de evaluación de letras fallaba con letras duplicadas, ya que usaba `RegExp` para contar ocurrencias sin marcar las letras ya consumidas; ahora usa un algoritmo de dos pasadas que lo resuelve correctamente. También se arregló el estado del teclado, que sobreescribía colores verdes o naranjas con gris al final de cada turno; ahora se respeta una prioridad de estados para que un color mejor nunca sea degradado.
+application/ contiene la capa de orquestación:
+GameController coordina las acciones del usuario y el flujo del juego.
+GameFactory centraliza la creación de instancias necesarias.
 
-Por último, se unificó el diseño visual de las páginas de victoria y derrota con un nuevo archivo `winLose.css` compartido, y se añadieron tres nuevas clases CSS al teclado para reflejar los mismos colores que las celdas de la cuadrícula.
+infrastructure/ agrupa implementaciones concretas dependientes del entorno:
+KeyboardInput gestiona la entrada del teclado.
+Interface manipula el DOM.
+NavigationHandler controla la navegación entre pantallas.
 
+interfaces/ define las abstracciones que permiten desacoplar módulos:
+Interfaces como IWordEvaluator, IKeyboardInput, IInterface o INavigationHandler permiten sustituir implementaciones sin modificar la lógica del juego.
+config/ contiene la configuración global (env.ts).
+Esta organización mejora la legibilidad y facilita el mantenimiento, ya que cada módulo tiene una responsabilidad clara.
+
+3. Cambios aplicados en el diseño
+El código actual refleja varios de los objetivos de la refactorización:
+
+Separación de responsabilidades entre dominio, infraestructura y aplicación.
+Uso de interfaces para desacoplar dependencias.
+GameController como punto central de coordinación.
+WordEvaluator, KeyboardInput y Interface como componentes especializados.
+Aunque la arquitectura no implementa todos los detalles del diseño ideal, sí establece una base modular sólida.
+
+4. Mejoras funcionales implementadas
+Durante la refactorización se corrigieron problemas detectados en la versión original:
+
+El algoritmo de evaluación de letras se ajustó para manejar correctamente letras duplicadas.
+El estado del teclado se actualiza respetando la prioridad de colores, evitando degradaciones.
+Se unificó el diseño visual de las pantallas de victoria y derrota mediante un nuevo archivo winLose.css.
+
+5. Estado actual del proyecto
+El proyecto ahora cuenta con una estructura modular clara y escalable. Aunque algunos aspectos del diseño ideal (como la inyección de dependencias estricta o la eliminación total de dependencias implícitas) pueden no estar implementados al 100%, la arquitectura actual representa una mejora significativa respecto al enfoque monolítico original.
 
 # Refactoring Documentation — Wordle - ENG
 
 ## What was refactored and why?
 
-The project originally followed a monolithic design where the `Game` class acted as a God Object: it managed game state, manipulated the DOM, validated keyboard input, evaluated letters, and controlled navigation, all in one place. Any change to one of these concerns would inevitably affect the others, making the codebase difficult to maintain and to test.
+1. Initial state of the project
+The project originally followed a monolithic design in which the Game class acted as a God Object. It handled game state, DOM manipulation, keyboard validation, word evaluation, and navigation logic all in one place. This tight coupling made the code difficult to maintain, extend, and test.
 
-The refactoring splits those responsibilities into independent classes following SOLID principles. `Game` becomes a pure model that only manages state. `WordEvaluator` is solely responsible for comparing the submitted word against the target. `KeyboardInput` handles key validation and transformation. `Interface` centralises all DOM interaction. `NavigationHandler` decides when to redirect the player. And `GameController` acts as the orchestrator, receiving all of these pieces via dependency injection and coordinating them without containing any business logic of its own.
+2. Transition to a modular architecture
+The refactoring reorganized the project into a clearer, layered structure, distributing responsibilities across independent modules:
 
-A subsequent iteration introduced two further improvements aimed at decoupling. First, the `IWordEvaluator` interface was extracted into its own file, so that `Game` no longer depends on the concrete `WordEvaluator` class but on an abstraction — allowing the evaluator to be swapped for any other implementation without touching the game logic. Second, `Game` stopped importing the global constants from `env.ts` and instead receives them as constructor parameters (`maxWordSize` and `maxAttempts`), removing the implicit dependency on an external module and making the class fully self-contained and testable in isolation.
+domain/ contains the core game logic:
+Game manages the internal state.
+WordEvaluator compares the user’s input with the target word.
+Supporting models such as Word and GameStatus encapsulate domain concepts.
 
-Two bugs were also fixed. The letter evaluation algorithm was producing incorrect results with duplicate letters, as it used `RegExp` to count occurrences without tracking already-consumed letters; it now uses a two-pass algorithm that handles this correctly. The keyboard state logic was also corrected — it previously overwrote green or orange key colours with grey at the end of each turn; it now respects a state priority system so that a better colour is never downgraded.
+application/ contains orchestration logic:
+GameController coordinates user actions and game flow.
+GameFactory centralizes the creation of required components.
 
-Finally, the visual design of the win and loss pages was unified with a new shared `winLose.css` file, and three new CSS classes were added to the keyboard to mirror the same colour scheme used by the grid cells.
+infrastructure/ contains environment‑dependent implementations:
+KeyboardInput handles keyboard events and input validation.
+Interface manages all DOM interactions.
+NavigationHandler controls transitions between screens.
+
+interfaces/ defines abstractions that decouple modules:
+Interfaces such as IWordEvaluator, IKeyboardInput, IInterface, and INavigationHandler allow swapping implementations without modifying game logic.
+config/ stores global configuration (env.ts).
+This structure improves readability and maintainability by ensuring each module has a single, well‑defined responsibility.
+
+3. Design improvements reflected in the current code
+The current implementation incorporates several of the intended architectural goals:
+
+Clear separation between domain logic, infrastructure, and application orchestration.
+Use of interfaces to reduce coupling between components.
+GameController acting as the central coordinator.
+Specialized classes for evaluation, input handling, and UI updates.
+While not every aspect of the ideal design is implemented, the project now follows a much more modular and scalable structure than the original monolithic version.
+
+4. Functional fixes and enhancements
+During the refactor, several issues from the original implementation were addressed:
+
+The letter‑evaluation algorithm was corrected to properly handle duplicate letters.
+Keyboard state updates now respect color priority, preventing valid green or orange states from being overwritten.
+The win and lose screens were visually unified using a shared winLose.css file.
+
+5. Current state of the project
+The project now has a solid modular foundation. Even if some advanced design goals (such as strict dependency injection or fully isolated configuration) are not fully implemented, the current architecture represents a significant improvement in clarity, testability, and maintainability compared to the original version.
