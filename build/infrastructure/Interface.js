@@ -49,5 +49,14 @@ export class Interface {
         key.classList.remove("key-green", "key-orange", "key-grey");
         key.classList.add(KEY_STATE_CLASSES[state]);
     }
+    renderEvaluation(turn, currentWord, evaluation) {
+        evaluation.forEach((state, index) => {
+            if (!state)
+                return;
+            this.setCellState(turn, index, state);
+            const letter = currentWord[index];
+            this.setKeyState(letter, state);
+        });
+    }
 }
 //# sourceMappingURL=Interface.js.map

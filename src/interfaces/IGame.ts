@@ -1,5 +1,5 @@
 import { GameStatus } from "../domain/GameStatus.js";
-import { LetterResult } from '../domain/WordEvaluator';
+import { LetterResult } from '../domain/WordEvaluator.js';
 import { LetterAddAction } from "../types/letterAddAction.js";
 import { LetterDeleteAction } from "../types/letterDeleteAction.js";
 

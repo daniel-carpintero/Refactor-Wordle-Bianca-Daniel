@@ -2,7 +2,7 @@ import { GameStatus } from "./GameStatus.js";
 import { IWordEvaluator } from "../interfaces/IWordEvaluator.js";
 import { LetterAddAction } from "../types/letterAddAction.js";
 import { LetterDeleteAction } from "../types/letterDeleteAction.js";
-import { IGame } from "../interfaces/IGame";
+import { IGame } from "../interfaces/IGame.js";
 import { TurnResult } from "../types/TurnResult.js";
 
 export type KeyAction = LetterAddAction | LetterDeleteAction | null;
