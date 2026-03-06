@@ -1,4 +1,4 @@
-export class Word {
+export class WordProvider {
     private readonly _words: string[];
 
     constructor(words: string[]) {

@@ -1,4 +1,4 @@
-import { Word } from "../domain/Word.js";
+import { WordProvider } from "../domain/WordProvider.js";
 import { IGame } from "../interfaces/IGame.js";
 import { Game } from "../domain/Game.js";
 import { KeyboardInput } from "../infrastructure/KeyboardInput.js";
@@ -14,7 +14,7 @@ export function createGameController(): GameController {
     const ui = new Interface();
     const wordEvaluator = new WordEvaluator(MAX_WORD_SIZE);
 
-    const wordCollection = new Word([
+    const wordCollection = new WordProvider([
         "JUEGO", "TALAR", "BAILE", "ANDAR", "MONTE",
         "PLAYA", "PLATA", "ARBOL", "QUESO"
     ]);
