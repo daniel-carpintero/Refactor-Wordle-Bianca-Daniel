@@ -4,6 +4,7 @@ import { IWordEvaluator } from "../interfaces/IWordEvaluator.js";
 import { TurnResult } from "../types/TurnResult.js";
 import { GameStatus } from "./GameStatus.js";
 import { LetterDeleteAction } from "../types/letterDeleteAction.js";
+import { LetterResult } from "./WordEvaluator.js";
 
 export class GameActions {
     private readonly _game: IGame;
@@ -12,6 +13,28 @@ export class GameActions {
     constructor(game: IGame, evaluator: IWordEvaluator){
         this._game = game;
         this._wordEvaluator = evaluator;
+    }
+
+    private isWordComplete(): boolean {
+        return this._game.currentWord.length === this._game.maxWordSize;
+    }
+
+    private isWinner(): boolean {
+        return this._game.currentWord === this._game.pickedWord;
+    }
+
+    private isLastTurn(): boolean {
+        return this._game.turn === this._game.maxAttempts;
+    }
+
+    private evaluateCurrentWord(): LetterResult[] {
+        return this._wordEvaluator.evaluateWord(this._game.pickedWord, this._game.currentWord);
+    }
+
+    private prepareNextTurn(): void {
+        this._game.incrementTurn();
+        this._game.resetCurrentPosition();
+        this._game.resetCurrentWord();
     }
     
     addLetter(letter: string): LetterAddAction | null {
@@ -33,19 +56,17 @@ export class GameActions {
     }
 
     enterPressed(): TurnResult {
-        if(this._game.currentWord.length !== this._game.maxWordSize){
+        if(!this.isWordComplete()){
             return {status: GameStatus.ONGOING, evaluation: null, evaluatedTurn: null};
         }
 
-        const isWinner = this._game.currentWord === this._game.pickedWord;
-        const isLastTurn = this._game.turn === this._game.maxAttempts;
-
-        const evaluation = this._wordEvaluator.evaluateWord(this._game.pickedWord, this._game.currentWord);
+        const evaluation = this.evaluateCurrentWord();
         const evaluatedTurn = this._game.turn;
 
-        this._game.incrementTurn();
-        this._game.resetCurrentPosition();
-        this._game.resetCurrentWord();
+        const isWinner = this.isWinner();
+        const isLastTurn = this.isLastTurn();
+
+        this.prepareNextTurn();
 
         if (isWinner) {
             return { status: GameStatus.WIN, evaluation, evaluatedTurn };

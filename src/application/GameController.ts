@@ -1,16 +1,19 @@
 import { IGame } from "../interfaces/IGame.js";
+import { IGameActions } from "../interfaces/IGameActions.js";
 import { IInterface } from "../interfaces/IInterface.js";
 import { IKeyboardInput } from "../interfaces/IKeyboardInput.js";
 import { INavigationHandler } from "../interfaces/INavigationHandler.js";
 
 export class GameController {
-    private _game: IGame;
+    private _game: IGame
+    private _gameActions: IGameActions;
     private _interface: IInterface;
     private _navigation: INavigationHandler;
     private _keyboard: IKeyboardInput;
 
-    constructor(game: IGame, ui: IInterface, navigation: INavigationHandler, keyboard: IKeyboardInput) {
+    constructor(game: IGame, gameActions: IGameActions, ui: IInterface, navigation: INavigationHandler, keyboard: IKeyboardInput) {
         this._game = game;
+        this._gameActions = gameActions;
         this._interface = ui;
         this._navigation = navigation;
         this._keyboard = keyboard;
@@ -18,7 +21,7 @@ export class GameController {
 
     private handleEnter(): void {
         const currentWord = this._game.currentWord;
-        const result = this._game.enterPressed();
+        const result = this._gameActions.enterPressed();
 
         const evaluation = result.evaluation;
         const turn = result.evaluatedTurn;
@@ -31,7 +34,7 @@ export class GameController {
     }
 
     private handleBackspace(): void {
-        const action = this._game.backspacePressed();
+        const action = this._gameActions.backspacePressed();
 
         if (action) {
             this._interface.clearLetter(action.turn, action.position);
@@ -40,7 +43,7 @@ export class GameController {
 
     private handleLetter(code: string): void {
         const letter = this._keyboard.transformCodeToLetter(code);
-        const action = this._game.addLetter(letter);
+        const action = this._gameActions.addLetter(letter);
 
         if (action) {
             this._interface.setLetter(

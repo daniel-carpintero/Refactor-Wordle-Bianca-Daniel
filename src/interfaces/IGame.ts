@@ -1,11 +1,11 @@
 
 export interface IGame {
-    currentWord: string;
+    readonly currentWord: string;
     resetCurrentWord(): void;
     appendLetter(letter: string): void;
     removeLastLetter(): void;
 
-    currentPosition: number;
+    readonly currentPosition: number;
     incrementCurrentPosition(): void;
     decrementCurrentPosition(): void;
     resetCurrentPosition(): void;

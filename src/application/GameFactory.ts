@@ -7,6 +7,7 @@ import { Interface } from "../infrastructure/Interface.js";
 import { GameController } from "./GameController.js";
 import { WordEvaluator } from "../domain/WordEvaluator.js";
 import { MAX_WORD_SIZE, MAX_ATTEMPTS } from "../config/env.js";
+import { GameActions } from "../domain/GameActions.js";
 
 export function createGameController(): GameController {
     const navigation = new NavigationHandler();
@@ -21,10 +22,12 @@ export function createGameController(): GameController {
     
     const pickedWord = wordCollection.getRandomWord();
 
-    const game: IGame = new Game(pickedWord, wordEvaluator, MAX_WORD_SIZE, MAX_ATTEMPTS);
+    const game: IGame = new Game(pickedWord, MAX_WORD_SIZE, MAX_ATTEMPTS);
+    const gameActions = new GameActions(game, wordEvaluator);
 
     return new GameController(
         game,
+        gameActions,
         ui,
         navigation,
         keyboardInput

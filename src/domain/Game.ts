@@ -25,10 +25,6 @@ export class Game implements IGame{
         return this._currentWord;
     }
 
-    set currentWord(currentWord: string) {
-        this._currentWord = currentWord;
-    }
-
     resetCurrentWord(): void {
         this._currentWord = "";
     }
@@ -37,12 +33,8 @@ export class Game implements IGame{
         this._currentWord += letter;
     }
 
-    get currentPosition(): number {
+    get currentPosition(): number{
         return this._currentPosition;
-    }
-
-    set currentPosition(currentPosition: number) {
-        this._currentPosition = currentPosition;
     }
 
     incrementCurrentPosition(): void {
