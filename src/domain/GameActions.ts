@@ -1,52 +1,51 @@
 import { IGame } from "../interfaces/IGame.js";
 import { LetterAddAction } from "../types/letterAddAction.js";
 import { IWordEvaluator } from "../interfaces/IWordEvaluator.js";
+import { TurnResult } from "../types/TurnResult.js";
+import { GameStatus } from "./GameStatus.js";
+import { LetterDeleteAction } from "../types/letterDeleteAction.js";
 
 export class GameActions {
-    private readonly _maxWordSize: number;
-    private readonly _maxAttempts: number;
     private readonly _game: IGame;
     private readonly _wordEvaluator: IWordEvaluator;
 
-    constructor(game: IGame, maxWordSize: number, maxAttempts: number, evaluator: IWordEvaluator){
+    constructor(game: IGame, evaluator: IWordEvaluator){
         this._game = game;
-        this._maxWordSize = maxWordSize;
-        this._maxAttempts = maxAttempts;
         this._wordEvaluator = evaluator;
     }
     
     addLetter(letter: string): LetterAddAction | null {
-        if(this._game.currentPosition >= this.maxWordSize){
+        if(this._game.currentPosition >= this._game.maxWordSize){
             return null;
         }
 
         const action: LetterAddAction = {
             type: "add",
             letter,
-            position: this._currentPosition,
-            turn: this._turn
+            position: this._game.currentPosition,
+            turn: this._game.turn
         };
 
-        this._currentPosition++;
-        this._currentWord += letter;
+        this._game.incrementCurrentPosition();
+        this._game.appendLetter(letter);
 
         return action;
     }
 
     enterPressed(): TurnResult {
-        if(this._currentWord.length !== this.maxWordSize){
+        if(this._game.currentWord.length !== this._game.maxWordSize){
             return {status: GameStatus.ONGOING, evaluation: null, evaluatedTurn: null};
         }
 
-        const isWinner = this._currentWord === this.pickedWord;
-        const isLastTurn = this._turn === this.maxAttempts;
+        const isWinner = this._game.currentWord === this._game.pickedWord;
+        const isLastTurn = this._game.turn === this._game.maxAttempts;
 
-        const evaluation = this._wordEvaluator.evaluateWord(this._pickedWord, this._currentWord);
-        const evaluatedTurn = this._turn;
+        const evaluation = this._wordEvaluator.evaluateWord(this._game.pickedWord, this._game.currentWord);
+        const evaluatedTurn = this._game.turn;
 
-        this._turn++;
-        this._currentPosition = 0;
-        this._currentWord = "";
+        this._game.incrementTurn();
+        this._game.resetCurrentPosition();
+        this._game.resetCurrentWord();
 
         if (isWinner) {
             return { status: GameStatus.WIN, evaluation, evaluatedTurn };
@@ -60,17 +59,17 @@ export class GameActions {
     }
 
     backspacePressed(): LetterDeleteAction | null {
-        if (this._currentPosition <= 0) {
+        if (this._game.currentPosition <= 0) {
             return null;  
         }
 
-        this._currentPosition -= 1;
-        this._currentWord = this._currentWord.slice(0, -1);
+        this._game.decrementCurrentPosition();
+        this._game.removeLastLetter();
 
         return {
             type: "delete",
-            position: this._currentPosition,
-            turn: this._turn
+            position: this._game.currentPosition,
+            turn: this._game.turn
         };
     }
 }
