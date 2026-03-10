@@ -1,18 +1,20 @@
+# Wordle Refactoring - Clean Code & SOLID
+
 **Este es un repo del código de un clon del juego Wordle desarrollado en TypeScript. Es un código que tiene algún bug que hay que detectar y solucionar y está pensado para utilizarlo como práctica de refactorización para una formación en Clean code y principios SOLID.**
 
 **1. Para poder trabajar con el proyecto necesitas tener instalado NodeJs.**
 
-Para comprobar si tienes instalado NodeJs en tu equipo abre una terminal y escribe este comando: `node -v`. Si receibes una respuesta como esta `v22.8.0`, ya lo tienes. Si no, puedes instalarlo desde [aquí](https://nodejs.org/en/download).
+Para comprobar si tienes instalado NodeJs en tu equipo abre una terminal y escribe este comando: `node -v`. Si recibes una respuesta como esta `v22.8.0`, ya lo tienes. Si no, puedes instalarlo desde [aquí](https://nodejs.org/en/download).
 
 *Node.js es un entorno de ejecución de JavaScript basado en el motor V8 de Chrome, que permite ejecutar código fuera del navegador.
 Su finalidad es el desarrollo backend y utiliza un modelo basado en eventos y asíncrono, es decir, puede hacer varias cosas sin quedarse bloqueado esperando, lo que le permite manejar muchas conexiones simultáneamente con bajo consumo de recursos.
-Es especialmente popular para crear APIs, servidores web y aplicaciones en tiempo real gracias a su ecosistema de paquetes (npm) que permite gestionar de forma muy cómoda las dependecias (utilidades de terceros) del proyecto.*
+Es especialmente popular para crear APIs, servidores web y aplicaciones en tiempo real gracias a su ecosistema de paquetes (npm) que permite gestionar de forma muy cómoda las dependencias (utilidades de terceros) del proyecto.*
 
 **2. Clona este repositorio en local**
 
 **3. Instala las dependencias**
 
-Para ello abre una terminal y situate en el directorio del repositorio que acabas de clonar. Desde ahí ejecuta `npm install`. Esto descargará y configurará todas las dependecias del proyecto. 
+Para ello abre una terminal y situate en el directorio del repositorio que acabas de clonar. Desde ahí ejecuta `npm install`. Esto descargará y configurará todas las dependencias del proyecto. 
 
 *Cuando hablamos de dependencias nos referimos a utilidades o bibliotecas de terceros. Es decir, herramientas que han desarrollado otros programadores y que, debido a que son de código abierto, cualquiera puede usar en su proyecto. Si no modificas ese código nunca, no tiene sentido que lo controles mediante un repositorio de Git, por lo que ese código no se sube a los repositorios remotos, así aligeramos el código que controla el repo, y nos centramos solo en mantener el código del que somos propietarios. Para no controlar un archivo o carpeta dentro de un repo solo tenemos que añadirlo al archivo `.gitignore`. Las dependencias de un proyecto en NodeJS se gestionan mediante un archivo llamado `package.json`. Si quieres saber más sobre la finalidad de este archivo, puedes hacerlo desde [aquí](https://docs.npmjs.com/cli/v11/configuring-npm/package-json)*
 
@@ -32,4 +34,53 @@ Uno de los miembros del equipo deberá crear un repo nuevo en Github y añadir a
 
 **7. Refactorizar**
 
-Los archivos sobre los que tenéis que trabajar son los .ts. A medida que vayáis haciendo cambios y queráis probarlos, necesitáis transpilar el código a JavaScript, para ello tendréis que ir a la consola, y, desde dentro de la carpeta raiz del proyecto, ecutar el comando `npm run tsc`. Una vez el transpilador haya acabado, tendrás que poner en marcha de nuevo la app con `npm start`.
+Los archivos sobre los que tenéis que trabajar son los .ts. A medida que vayáis haciendo cambios y queráis probarlos, necesitáis transpilar el código a JavaScript, para ello tendréis que ir a la consola, y, desde dentro de la carpeta raiz del proyecto, ejecutar el comando `npm run tsc`. Una vez el transpilador haya acabado, tendrás que poner en marcha de nuevo la app con `npm start`.
+
+## Refactorización aplicada
+Durante la práctica se ha refactorizado el código original con el objetivo de mejorar su legibilidad y escalabilidad, aplicando los principios SOLID y Clean Code. 
+
+### Cambios principales
+**1. Separación de responsabilidades**
+Se han separado las diferentes responsabilidades en clases independientes para evitar mezclar responsabilidades en una misma clase y facilitar la reutilización del código. 
+
+Algunos ejemplos de la aplicación de este principio son las clases:
+- Game: Se encarga de gestionar únicamente el estado del juego.
+- GameActions: Contiene la lógica de las acciones del jugador.
+- GameController: Coordina el flujo entre el juego y la interfaz.
+- GameUI: Se encarga de renderizar la interfaz y manipular el DOM.
+
+Esto cumple el principio de Single Responsibility (SRP), cada clase tiene una única responsabilidad.
+
+**2. Uso de interfaces**
+Se han introducido interfaces para desacoplar las implementaciones concretas: 
+- IGame
+- IGameActions
+- IGameUI
+- IKeyboardInput
+- INavigationHandler
+- IWordProvider
+- IWordEvaluator
+
+Esto facilita la extensión del sistema sin modificar el código existente, cumpliendo con el principio de Open/Closed. 
+
+**3. Eliminación de dependencias innecesarias**
+Se han reorganizado las dependencias entre clases para evitar acoplamientos innecesarios y mejorar la modularidad del sistema. 
+
+**4. Mejora de nombres y claridad del código**
+Se han renombrado algunas clases para que su responsabilidad sea más clara y descriptiva.
+
+También se han mejorado nombres de variables y métodos para que el código sea más autodescriptivo.
+
+**5. Organización del proyecto**
+El proyecto se ha organizado en carpetas según su responsabilidad:
+- src/
+    - application
+    - domain
+    - infrastructure
+    - interfaces
+    - config
+
+Se ha seguido esta organización para facilitar la comprensión de la arquitectura del proyecto y mantener una mejor organización de los ficheros. 
+
+### Objetivo de la refactorización
+El objetivo ha sido mejorar la legibilidad, escalabilidad y mantenibilidad del código, además de aplicar los conocimientos adquiridos sobre principios SOLID y de clean code. 
