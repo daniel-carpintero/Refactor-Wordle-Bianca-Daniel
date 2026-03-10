@@ -1,15 +1,15 @@
 import { IKeyboardInput } from "../interfaces/IKeyboardInput.js";
 
 export class KeyboardInput implements IKeyboardInput {
-    private readonly _validLetterCodes: string[] = [
+    private readonly _validLetterCodes = new Set([
         "KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU", "KeyI", "KeyO", "KeyP",
         "KeyA", "KeyS", "KeyD", "KeyF", "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL",
         "KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM",
         "Semicolon"
-    ];
+    ]);
 
     isValidLetter(code: string): boolean {
-        return this._validLetterCodes.includes(code);
+        return this._validLetterCodes.has(code);
     }
 
     isEnterKey(code: string): boolean {

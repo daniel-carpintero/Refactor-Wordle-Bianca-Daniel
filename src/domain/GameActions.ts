@@ -5,6 +5,7 @@ import { TurnResult } from "../types/TurnResult.js";
 import { GameStatus } from "./GameStatus.js";
 import { LetterDeleteAction } from "../types/letterDeleteAction.js";
 import { LetterResult } from "./WordEvaluator.js";
+import { ActionType } from "./ActionType.js";
 
 export class GameActions {
     private readonly _game: IGame;
@@ -43,7 +44,7 @@ export class GameActions {
         }
 
         const action: LetterAddAction = {
-            type: "add",
+            type: ActionType.ADD,
             letter,
             position: this._game.currentPosition,
             turn: this._game.turn
@@ -88,7 +89,7 @@ export class GameActions {
         this._game.removeLastLetter();
 
         return {
-            type: "delete",
+            type: ActionType.DELETE,
             position: this._game.currentPosition,
             turn: this._game.turn
         };
