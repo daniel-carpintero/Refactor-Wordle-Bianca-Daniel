@@ -1,13 +1,14 @@
 export class GameController {
-    constructor(game, ui, navigation, keyboard) {
+    constructor(game, gameActions, ui, navigation, keyboard) {
         this._game = game;
+        this._gameActions = gameActions;
         this._interface = ui;
         this._navigation = navigation;
         this._keyboard = keyboard;
     }
     handleEnter() {
         const currentWord = this._game.currentWord;
-        const result = this._game.enterPressed();
+        const result = this._gameActions.enterPressed();
         const evaluation = result.evaluation;
         const turn = result.evaluatedTurn;
         if (evaluation && turn !== null) {
@@ -16,14 +17,14 @@ export class GameController {
         this._navigation.navigate(result.status);
     }
     handleBackspace() {
-        const action = this._game.backspacePressed();
+        const action = this._gameActions.backspacePressed();
         if (action) {
             this._interface.clearLetter(action.turn, action.position);
         }
     }
     handleLetter(code) {
         const letter = this._keyboard.transformCodeToLetter(code);
-        const action = this._game.addLetter(letter);
+        const action = this._gameActions.addLetter(letter);
         if (action) {
             this._interface.setLetter(action.turn, action.position, action.letter);
         }

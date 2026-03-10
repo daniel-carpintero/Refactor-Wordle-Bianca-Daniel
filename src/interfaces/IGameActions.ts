@@ -1,10 +1,9 @@
-import { GameStatus } from "../domain/GameStatus.js";
-import { LetterResult } from "../domain/WordEvaluator.js";
 import { LetterAddAction } from "../types/letterAddAction.js";
 import { LetterDeleteAction } from "../types/letterDeleteAction.js";
+import { TurnResult } from "../types/TurnResult.js";
 
 export interface IGameActions {
     addLetter(letter: string): LetterAddAction | null;
-    enterPressed(): {status: GameStatus; evaluation: LetterResult[] | null; evaluatedTurn: number | null;};
+    enterPressed(): TurnResult;
     backspacePressed(): LetterDeleteAction | null;
 }

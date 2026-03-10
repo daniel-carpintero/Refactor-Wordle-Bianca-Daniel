@@ -1,17 +1,17 @@
 import { IGame } from "../interfaces/IGame.js";
 import { IGameActions } from "../interfaces/IGameActions.js";
-import { IInterface } from "../interfaces/IInterface.js";
+import { IGameUI } from "../interfaces/IGameUI.js";
 import { IKeyboardInput } from "../interfaces/IKeyboardInput.js";
 import { INavigationHandler } from "../interfaces/INavigationHandler.js";
 
 export class GameController {
     private _game: IGame
     private _gameActions: IGameActions;
-    private _interface: IInterface;
+    private _interface: IGameUI;
     private _navigation: INavigationHandler;
     private _keyboard: IKeyboardInput;
 
-    constructor(game: IGame, gameActions: IGameActions, ui: IInterface, navigation: INavigationHandler, keyboard: IKeyboardInput) {
+    constructor(game: IGame, gameActions: IGameActions, ui: IGameUI, navigation: INavigationHandler, keyboard: IKeyboardInput) {
         this._game = game;
         this._gameActions = gameActions;
         this._interface = ui;

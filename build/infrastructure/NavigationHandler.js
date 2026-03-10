@@ -1,10 +1,10 @@
 import { GameStatus } from "../domain/GameStatus.js";
 export class NavigationHandler {
     navigate(status) {
-        if (status == GameStatus.WIN) {
+        if (status === GameStatus.WIN) {
             location.assign("/winner");
         }
-        if (status == GameStatus.LOSE) {
+        if (status === GameStatus.LOSE) {
             location.assign("/loser");
         }
     }

@@ -1,4 +1,4 @@
-import { IInterface } from "../interfaces/IInterface.js";
+import { IGameUI } from "../interfaces/IGameUI";
 import { LetterResult } from "../domain/WordEvaluator.js";
 
 export type CellState = "right" | "misplaced" | "wrong";
@@ -21,7 +21,7 @@ const STATE_PRIORITY: Record<CellState, number> = {
     wrong: 1
 };
 
-export class Interface implements IInterface{
+export class GameUI implements IGameUI {
 
     private getRow(turn: number): HTMLElement {
         const row = document.getElementById(`row_${turn}`);

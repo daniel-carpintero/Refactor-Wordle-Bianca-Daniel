@@ -3,7 +3,7 @@ import { IGame } from "../interfaces/IGame.js";
 import { Game } from "../domain/Game.js";
 import { KeyboardInput } from "../infrastructure/KeyboardInput.js";
 import { NavigationHandler } from "../infrastructure/NavigationHandler.js";
-import { Interface } from "../infrastructure/Interface.js";
+import { GameUI } from "../infrastructure/GameUI.js";
 import { GameController } from "./GameController.js";
 import { WordEvaluator } from "../domain/WordEvaluator.js";
 import { MAX_WORD_SIZE, MAX_ATTEMPTS } from "../config/env.js";
@@ -13,7 +13,7 @@ import { WORDS } from "../config/words.js";
 export function createGameController(): GameController {
     const navigation = new NavigationHandler();
     const keyboardInput = new KeyboardInput();
-    const ui = new Interface();
+    const ui = new GameUI();
     const wordEvaluator = new WordEvaluator();
 
     const wordProvider = new WordProvider(WORDS);

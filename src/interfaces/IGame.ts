@@ -1,4 +1,3 @@
-
 export interface IGame {
     readonly currentWord: string;
     resetCurrentWord(): void;
@@ -15,6 +14,6 @@ export interface IGame {
     readonly turn: number;
     incrementTurn(): void;
 
-    maxWordSize: number;
-    maxAttempts: number;
+    readonly maxWordSize: number;
+    readonly maxAttempts: number;
 }
